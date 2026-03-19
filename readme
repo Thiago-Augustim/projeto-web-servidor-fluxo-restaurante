@@ -1,0 +1,12 @@
+Fluxo de Salão (Garçom):
+Visualização do mapa de mesas (ocupadas vs. livres).
+Abertura de nova comanda vinculada a uma mesa.
+Lançamento de itens (Ex: 2 Cervejas, 1 X-Burguer) com campo de observação.
+Solicitação de fechamento com cálculo automático de 10%.
+Fluxo de Produção (Cozinha/Bar):
+Lista de pedidos pendentes por ordem de chegada.
+Botão para alterar status do item: Pendente → Em Preparo → Pronto.
+Histórico de itens entregues nas últimas 1h.
+Fluxo de Caixa (Administração):
+Confirmação de pagamento e liberação da mesa.
+Cadastro de produtos e preços (Cardápio).
