@@ -1,27 +1,58 @@
-:root{
+:root {
     --cinzaEscuro: #414141;
-    --cinzaClaro: #E3E3E3;
+    --cinzaClaro: #d3d3d3;
     --branco: #FFFFFF;
-    --mesaLivreColor: #9EFE95;  
+    --mesaLivreColor: #86dd7e;
     --mesaReservadaColor: #5D8BFF;
-    --mesaOcupadaColor: #F3383B;
+    --mesaOcupadaColor: #ff8385;
     --buttonsColor: #3b72fc;
+
+    --mesaLivreColorLegenda: #258516;
+    --mesaOcupadaColorLegenda: #e21313;
+    --mesaReservadaColorLegenda: #2e5dbb;
 }
 
-.bg-cinzaEscuro{
+
+.bg-cinzaEscuro {
     background-color: var(--cinzaEscuro);
 }
+.bg-cinzaClaro {
+    background-color: var(--cinzaClaro) !important;
+}
 
-.nav-link.active    {
+.livre {
+    --bs-card-bg: var(--mesaLivreColor) !important;
+    background-color: var(--mesaLivreColor) !important;
+}
+
+.bg-mesa-reservada {
+    --bs-card-bg: var(--mesaReservadaColor) !important;
+    background-color: var(--mesaReservadaColor) !important;
+}
+
+.nav-link.active {
     color: var(--cinzaClaro) !important;
 }
 
-.nav-link{
+.nav-link {
     color: var(--branco);
 }
 
-.nav-link:hover{
+.nav-link:hover {
     color: var(--cinzaClaro);
+}
+
+.card-mesa {
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+}
+
+.card-mesa:hover {
+    opacity: 0.8;
+}
+
+.btn-hover:hover {
+    opacity: 0.8;
 }
 
 
