@@ -31,81 +31,37 @@ include '../partials/header.php';
 
 
                 <!-- Container de Mesas -->
-                <div class="p-3 bg-secondary rounded me-4 ms-4 flex-grow-1 rounded-4">
+                <div class="p-3 rounded bg-cinzaClaro me-4 ms-4 flex-grow-1 rounded-4">
                     <div class="row g-3">
 
+                        <!-- Faz um foreach em um array de mesas e preenche na tela -->
+                        <?php require '../../src/data/mesas.php'; ?>
+
+
+                        <?php
+                        foreach ($mesas as $mesa) {
+                            echo '
+                            <div class="col-6 col-sm-4 col-md-3 col-lg-3">
+                                <div class="card text-center p-3 rounded card-mesa" style="background-color: var(--mesa' . ucfirst($mesa['status']) . 'Color);">
+                                    <strong>Mesa ' . $mesa['numero'] . '</strong>
+                                    <span>Cadeiras: ' . $mesa['cadeiras'] . '</span>
+                                </div>
+                            </div>';
+                        }
+
+                        ?>
+
                         <!-- Mesas -->
-                        <div class="col-6 col-sm-4 col-md-3 col-lg-3">
-                            <div class="card text-center p-3 rounded card-mesa" style="background-color: var(--mesaLivreColor);">
-                                <strong>Mesa 1</strong>
-                                <span>Cadeiras: 5</span>
+                           <!-- <div class="col-6 col-sm-4 col-md-3 col-lg-3">
+                             <div class="card text-center p-3 rounded card-mesa" style="background-color: var(--mesaLivreColor);">
+                              <strong>Mesa 1</strong>
+                              <span>Cadeiras: 5</span>
                             </div>
                         </div>
-                        <div class="col-6 col-sm-4 col-md-3 col-lg-3">
-                            <div class="card text-center p-3 rounded card-mesa" style="background-color: var(--mesaLivreColor);">
-                                <strong>Mesa 1</strong>
-                                <span>Cadeiras: 5</span>
-                            </div>
-                        </div>
-                        <div class="col-6 col-sm-4 col-md-3 col-lg-3">
-                            <div class="card text-center p-3 rounded card-mesa" style="background-color: var(--mesaLivreColor);">
-                                <strong>Mesa 1</strong>
-                                <span>Cadeiras: 5</span>
-                            </div>
-                        </div>
-                        <div class="col-6 col-sm-4 col-md-3 col-lg-3">
-                            <div class="card text-center p-3 rounded card-mesa" style="background-color: var(--mesaOcupadaColor);">
-                                <strong>Mesa 1</strong>
-                                <span>Cadeiras: 5</span>
-                            </div>
-                        </div>
-                        <div class="col-6 col-sm-4 col-md-3 col-lg-3">
-                            <div class="card text-center p-3 rounded card-mesa" style="background-color: var(--mesaReservadaColor);">
-                                <strong>Mesa 1</strong>
-                                <span>Cadeiras: 5</span>
-                            </div>
-                        </div>
-                        <div class="col-6 col-sm-4 col-md-3 col-lg-3">
-                            <div class="card text-center p-3 rounded card-mesa" style="background-color: var(--mesaReservadaColor);">
-                                <strong>Mesa 1</strong>
-                                <span>Cadeiras: 5</span>
-                            </div>
-                        </div>
-                        <div class="col-6 col-sm-4 col-md-3 col-lg-3">
-                            <div class="card text-center p-3 rounded card-mesa" style="background-color: var(--mesaOcupadaColor);">
-                                <strong>Mesa 1</strong>
-                                <span>Cadeiras: 5</span>
-                            </div>
-                        </div>
-                        <div class="col-6 col-sm-4 col-md-3 col-lg-3">
-                            <div class="card text-center p-3 rounded card-mesa" style="background-color: var(--mesaLivreColor);">
-                                <strong>Mesa 1</strong>
-                                <span>Cadeiras: 5</span>
-                            </div>
-                        </div>
-                        <div class="col-6 col-sm-4 col-md-3 col-lg-3">
-                            <div class="card text-center p-3 rounded card-mesa" style="background-color: var(--mesaLivreColor);">
-                                <strong>Mesa 1</strong>
-                                <span>Cadeiras: 5</span>
-                            </div>
-                        </div>
-                        <div class="col-6 col-sm-4 col-md-3 col-lg-3">
-                            <div class="card text-center p-3 rounded card-mesa" style="background-color: var(--mesaOcupadaColor);">
-                                <strong>Mesa 1</strong>
-                                <span>Cadeiras: 5</span>
-                            </div>
-                        </div>
-
-
-
+                        -->
                     </div>
                 </div>
-
-
-
-
             </div>
-
         </div>
 
         <div class="col-3 bg-info-subtle flex-grow-1">Container lateral de Mesas</div>
