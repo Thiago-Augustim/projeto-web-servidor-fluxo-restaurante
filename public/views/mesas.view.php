@@ -76,9 +76,9 @@ include '../partials/header.php';
                         </button>
 
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item Livre" href="#">Livre</a></li>
-                            <li><a class="dropdown-item Ocupado" href="#">Ocupado</a></li>
-                            <li><a class="dropdown-item Reservado" href="#">Reservado</a></li>
+                            <li><a class="dropdown-item status-mesa" href="#">Livre</a></li>
+                            <li><a class="dropdown-item status-mesa" href="#">Ocupado</a></li>
+                            <li><a class="dropdown-item status-mesa" href="#">Reservado</a></li>
                         </ul>
                     </div>
 
