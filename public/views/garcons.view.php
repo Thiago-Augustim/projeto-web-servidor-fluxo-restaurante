@@ -1,12 +1,86 @@
 <?php
-$titulo = 'Garçons';
-$paginaAtiva = 'garcons';
-?>
-<body>
-
-<?php
-
+$titulo = 'Funcionários';
+$paginaAtiva = 'funcionarios';
 include '../partials/header.php';
-include '../partials/nav.php';
-    
-include '../partials/footer.php';
+?>
+
+<body class="vh-100 d-flex flex-column">
+
+<?php include '../partials/nav.php'; ?>
+
+<div class="row gx-0 vh-100 d-flex">
+
+    <!-- LISTA -->
+    <div class="col-9">
+        <div class="d-flex flex-column mb-3">
+
+            <!-- Header -->
+            <div class="d-flex justify-content-between align-items-center bg-cinzaClaro mx-4 my-3 rounded-4 flex-wrap gap-3 p-3">
+
+                <h5 class="mb-0">Equipe</h5>
+
+                <button type="button" class="btn px-5 btn-hover"
+                    style="background-color: var(--buttonsColor); color: var(--branco)">
+                    Novo Funcionário
+                </button>
+
+            </div>
+
+            <!-- Container -->
+            <div class="p-3 rounded bg-cinzaClaro me-4 ms-4 flex-grow-1 rounded-4">
+                <div class="row g-3">
+
+                    <?php require '../../src/data/funcionarios.php'; ?>
+
+                    <?php foreach ($funcionarios as $garcom): ?>
+                        <div class="col-6 col-sm-4 col-md-3 col-lg-3">
+                            <div class="card text-center p-3 rounded card-funcionario"
+                                data-funcionario='<?= htmlspecialchars(json_encode($garcom), ENT_QUOTES) ?>'
+                                style="cursor:pointer;">
+
+                                <strong><?= $garcom['nome'] ?></strong>
+                                <span><?= ucfirst($garcom['especialidade']) ?></span>
+
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- PAINEL DIREITA -->
+    <div class="col-3 flex-grow-1">
+        <div class="d-flex flex-column mt-3">
+
+            <div class="p-4 bg-cinzaClaro rounded-4 me-4 ms-4 mb-3 flex-grow-1">
+
+                <div class="d-flex justify-content-center align-items-center mb-3 pt-3 pb-3">
+                    <h4 id="painel-nome">--</h4>
+                </div>
+
+                <h5>ID:</h5>
+                <p id="painel-id" class="border bg-light d-inline-block p-2 ps-3 pe-3 rounded-3">
+                    <b>--</b>
+                </p>
+
+                <h5>Função:</h5>
+                <p id="painel-especialidade" class="border bg-light d-inline-block p-2 ps-3 pe-3 rounded-3">
+                    <b>--</b>
+                </p>
+
+            </div>
+
+            <div class="p-3 bg-cinzaClaro rounded-4 me-4 ms-4 flex-grow-1">
+                <h5>Atividade</h5>
+                <p>Selecione um funcionário para ver detalhes</p>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<?php include '../partials/footer.php'; ?>
