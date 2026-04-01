@@ -23,7 +23,7 @@ include '../partials/header.php';
                         <li style="color: var(--mesaReservadaColorLegenda)">● Reservado</li>
                     </ul>
 
-                    <button type="button" class="btn px-5 btn-hover" style="background-color: var(--buttonsColor); color: var(--branco)">
+                    <button type="button" class="btn px-5 btn-hover" style="background-color: var(--buttonsColor); color: var(--branco)" data-bs-toggle="modal" data-bs-target="#modalMesa">
                         Nova Mesa
                     </button>
 
@@ -32,7 +32,7 @@ include '../partials/header.php';
 
                 <!-- Container de Mesas -->
                 <div class="p-3 rounded bg-cinzaClaro me-4 ms-4 flex-grow-1 rounded-4">
-                    <div class="row g-3">
+                    <div class="row g-3" id="listaMesas">
 
                         <!-- Faz um foreach em um array de mesas e preenche na tela -->
                         <?php require '../../src/data/mesas.php'; ?>
@@ -93,6 +93,42 @@ include '../partials/header.php';
         </div>
     </div>
 
+    <div class="modal fade" id="modalMesa" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Nova Mesa</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Número da mesa</label>
+                        <input type="number" id="numero" class="form-control" min="1" placeholder="Ex: 10">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Cadeiras</label>
+                        <input type="number" id="cadeiras" class="form-control" min="1" placeholder="Ex: 4">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Status inicial</label>
+                        <select id="status" class="form-select">
+                            <option value="livre">Livre</option>
+                            <option value="ocupada">Ocupada</option>
+                            <option value="reservada">Reservada</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button class="btn btn-primary" onclick="cadastrarMesa()">Cadastrar</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
 
     <?php
 
