@@ -88,7 +88,7 @@ include '../partials/header.php';
     <div class="modal-dialog">
         <div class="modal-content">
 
-            <form method="POST" action="add_garcom.php">
+            <form method="POST">
 
                 <div class="modal-header">
                     <h5>Novo Funcionário</h5>
