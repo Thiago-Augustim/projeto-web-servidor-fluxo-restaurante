@@ -23,7 +23,7 @@ include '../partials/header.php';
                         <li style="color: var(--mesaReservadaColorLegenda)">● Reservado</li>
                     </ul>
 
-                    <button type="button" class="btn px-5 btn-hover" style="background-color: var(--buttonsColor); color: var(--branco)">
+                    <button type="button" class="btn px-5 btn-hover" style="background-color: var(--buttonsColor); color: var(--branco)" data-bs-toggle="modal" data-bs-target="#modalMesa">
                         Nova Mesa
                     </button>
 
@@ -31,7 +31,7 @@ include '../partials/header.php';
 
                 <!-- Container de Mesas -->
                 <div class="p-3 rounded bg-cinzaClaro me-4 ms-4 flex-grow-1 rounded-4">
-                    <div class="row g-3">
+                    <div class="row g-3" id="listaMesas">
 
                         <?php require '../../src/data/mesas.php'; ?>
                         <?php require '../../src/data/pedidos.php'; ?>
@@ -102,23 +102,6 @@ include '../partials/header.php';
         </div>
     </div>
 
-  
-
-    <!-- ✅ MODAL -->
-    <div class="modal fade" id="modalNovoPedido" tabindex="-1">
-        <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-content rounded-4 border-0">
-
-                <div class="modal-header border-0 pb-0">
-                    <h5 class="modal-title fw-bold">Novo Pedido</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-
-                <div class="modal-body pt-2">
-
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <span id="label-mesa-produtos" class="fw-semibold text-muted"></span>
-                    </div>
 
                     <?php
                     $produtos = [
