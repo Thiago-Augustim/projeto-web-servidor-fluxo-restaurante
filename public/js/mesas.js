@@ -62,8 +62,6 @@ function cadastrarMesa() {
     const cadeiras = document.getElementById('cadeiras').value;
     const status = ucfirst(document.getElementById('status').value);
 
-    if (!numero || !cadeiras) return alert('Preencha todos os campos.');
-
     adicionarCardMesa({ numero, cadeiras, status });
 
     bootstrap.Modal.getInstance(document.getElementById('modalMesa')).hide();

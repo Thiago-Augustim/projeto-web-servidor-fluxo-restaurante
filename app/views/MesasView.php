@@ -34,8 +34,25 @@ include VIEWS . 'partials/header.php';
                 <div class="p-3 rounded bg-cinzaClaro me-4 ms-4 flex-grow-1 rounded-4">
                     <div class="row g-3" id="listaMesas">
 
+                        <!-- Exibe erros caso algum dado de uma nova mesa seja inválido -->
+                        <?php if (!empty($_SESSION['erros'])): ?>
+                            <div class="toast-container position-fixed top-0 end-0 p-3">
+                                <div class="toast show" role="alert">
+                                    <div class="toast-header bg-danger text-white">
+                                        <strong class="me-auto">Erro</strong>
+                                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
+                                    </div>
+                                    <div class="toast-body">
+                                        <?php foreach ($_SESSION['erros'] as $erro): ?>
+                                            <p class="mb-1"><?= $erro ?></p>
+                                        <?php endforeach; ?>
+                                    </div>
+                                </div>
+                            </div>
+                            <?php unset($_SESSION['erros']); ?>
+                        <?php endif; ?>
+
                         <!-- Faz um foreach em um array de mesas e preenche na tela -->
-                        
                         <?php foreach ($mesas as $mesa): ?>
                             <div class="col-6 col-sm-4 col-md-3 col-lg-3">
                                 <div class="card text-center p-3 rounded card-mesa"
@@ -91,7 +108,8 @@ include VIEWS . 'partials/header.php';
         </div>
     </div>
 
-    <div class="modal fade" id="modalMesa" tabindex="-1">
+    <!-- Modal de Cadastro de Mesa -->
+    <form class="modal fade" id="modalMesa" tabindex="-1" method="POST" action="<?php echo BASE_URL . '?rota=mesas&acao=cadastrar' ?>">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
 
@@ -103,15 +121,15 @@ include VIEWS . 'partials/header.php';
                 <div class="modal-body">
                     <div class="mb-3">
                         <label class="form-label">Número da mesa</label>
-                        <input type="number" id="numero" class="form-control" min="1" placeholder="Ex: 10">
+                        <input type="number" name="numero" id="numero" class="form-control" min="1" placeholder="Ex: 10">
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Cadeiras</label>
-                        <input type="number" id="cadeiras" class="form-control" min="1" placeholder="Ex: 4">
+                        <input type="number" name="cadeiras" id="cadeiras" class="form-control" min="1" placeholder="Ex: 4">
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Status inicial</label>
-                        <select id="status" class="form-select">
+                        <select name="status" id="status" class="form-select">
                             <option value="livre">Livre</option>
                             <option value="ocupada">Ocupada</option>
                             <option value="reservada">Reservada</option>
@@ -126,7 +144,7 @@ include VIEWS . 'partials/header.php';
 
             </div>
         </div>
-    </div>
+    </form>
 
     <?php
 
