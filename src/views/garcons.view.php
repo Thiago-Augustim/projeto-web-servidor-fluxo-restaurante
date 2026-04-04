@@ -1,12 +1,12 @@
 <?php
 $titulo = 'Funcionários';
 $paginaAtiva = 'funcionarios';
-include '../partials/header.php';
+include VIEWS . 'partials/header.php';
 ?>
 
 <body class="vh-100 d-flex flex-column">
 
-<?php include '../partials/nav.php'; ?>
+<?php include VIEWS . 'partials/nav.php'; ?>
 
 <div class="row gx-0 vh-100 d-flex">
 
@@ -30,7 +30,7 @@ include '../partials/header.php';
             <div class="p-3 rounded bg-cinzaClaro me-4 ms-4 flex-grow-1 rounded-4">
                 <div class="row g-3">
 
-                    <?php require '../../src/data/funcionarios.php'; ?>
+                    <?php require MODELS . 'funcionarios.php'; ?>
 
                     <?php foreach ($funcionarios as $garcom): ?>
                         <div class="col-6 col-sm-4 col-md-3 col-lg-3">
@@ -115,4 +115,4 @@ include '../partials/header.php';
     </div>
 </div>
 
-<?php include '../partials/footer.php'; ?>
+<?php include VIEWS . 'partials/footer.php'; ?>

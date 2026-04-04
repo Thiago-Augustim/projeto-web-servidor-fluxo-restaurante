@@ -1,60 +1,20 @@
 <?php
-// TODO: substituir pelo banco depois
-$usuarios = [
-    ['usuario' => 'admin',  'senha' => '1234', 'tipo' => 'admin'],
-    ['usuario' => 'joao',   'senha' => '1234', 'tipo' => 'garcom'],
-    ['usuario' => 'carlos', 'senha' => '1234', 'tipo' => 'cozinha'],
-];
+define('ROOT', __DIR__ . '/../');
+define('VIEWS', ROOT . 'src/Views/');
+define('MODELS', ROOT . 'src/models/');
+define('BASE_URL', '/projeto-fluxo-restaurante/public/index.php?');
 
-$erro = '';
+session_start();
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    foreach ($usuarios as $u) {
-        if ($_POST['usuario'] === $u['usuario'] && $_POST['senha'] === $u['senha']) {
-            setcookie('tipo', $u['tipo']);
+$rota = $_GET['rota'] ?? 'mesas';
 
-            // redireciona para a primeira página permitida
-            $primeirasPaginas = [
-                'admin'  => 'mesas.view.php',
-                'garcom' => 'pedidos.view.php',
-                'cozinha'=> 'comandas.view.php',
-            ];
+match($rota) {
+    'mesas'      => require VIEWS . 'mesas.view.php',
+    'pedidos'    => require VIEWS . 'pedidos.view.php',
+    'cardapio'   => require VIEWS . 'cardapio.view.php',
+    'comandas'   => require VIEWS . 'comandas.view.php',
+    'garcons'    => require VIEWS . 'garcons.view.php',
+    'relatorios' => require VIEWS . 'relatorios.view.php',
+    default      => require VIEWS . 'mesas.view.php',
+};
 
-            header('Location: views/' . $primeirasPaginas[$u['tipo']]);
-            exit;
-        }
-    }
-    $erro = 'Usuário ou senha incorretos.';
-}
-?>
-
-<?php $titulo = 'Login'; include 'partials/header.php'; ?>
-
-<body class="vh-100 d-flex align-items-center justify-content-center bg-cinzaClaro">
-
-    <div class="card p-4 shadow" style="width: 360px;">
-
-        <h4 class="text-center mb-4">Fluxo Restaurante</h4>
-
-        <?php if ($erro): ?>
-            <div class="alert alert-danger"><?= $erro ?></div>
-        <?php endif; ?>
-
-        <form method="POST">
-            <div class="mb-3">
-                <label class="form-label">Usuário</label>
-                <input type="text" name="usuario" class="form-control" required autofocus>
-            </div>
-            <div class="mb-3">
-                <label class="form-label">Senha</label>
-                <input type="password" name="senha" class="form-control" required>
-            </div>
-            <button type="submit" class="btn w-100 text-white btn-hover"
-                style="background-color: var(--buttonsColor);">
-                Entrar
-            </button>
-        </form>
-
-    </div>
-
-<?php include 'partials/footer.php'; ?>

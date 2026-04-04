@@ -1,12 +1,12 @@
 <?php
 $titulo = 'Mesas';
 $paginaAtiva = 'mesas';
-include '../partials/header.php';
+include VIEWS . 'partials/header.php';
 ?>
 
 <body class="vh-100 d-flex flex-column">
 
-    <?php include '../partials/nav.php'; ?>
+    <?php include VIEWS . 'partials/nav.php'; ?>
 
     <div class="row gx-0 vh-100 d-flex">
 
@@ -35,7 +35,7 @@ include '../partials/header.php';
                     <div class="row g-3" id="listaMesas">
 
                         <!-- Faz um foreach em um array de mesas e preenche na tela -->
-                        <?php require '../../src/data/mesas.php'; ?>
+                        <?php require MODELS . 'mesas.php'; ?>
 
 
                         <?php foreach ($mesas as $mesa): ?>
@@ -133,4 +133,4 @@ include '../partials/header.php';
     <?php
 
 
-    include '../partials/footer.php';
+    include VIEWS . 'partials/footer.php';
