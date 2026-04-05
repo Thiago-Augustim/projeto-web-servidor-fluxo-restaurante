@@ -4,10 +4,12 @@
 function mesasIndex(): void
 {
 
-    $mesas = require MODELS . 'Mesas.php';
-    $mesasSessao = $_SESSION['mesas'] ?? [];
+   //Se não haver uma sessão de mesas, ele carrega as mesas do arquivo e salva na sessão
+   if(!isset($_SESSION['mesas'])){
+        $_SESSION['mesas'] = require MODELS . 'Mesas.php';
+   }
 
-    $mesas = array_merge($mesas, $mesasSessao);
+   $mesas = $_SESSION['mesas'];
 
     require VIEWS . 'MesasView.php';
 }
@@ -54,10 +56,11 @@ function validarMesa($mesa): array
         $erros[] = "Número da mesa inválido.";
     } else {
 
-        // só verifica duplicidade do numero da mesa
+        //verifica duplicidade do numero da mesa
         $mesas = require MODELS . 'Mesas.php';
         $mesasSessao = $_SESSION['mesas'] ?? [];
         $todasMesas = array_merge($mesas, $mesasSessao);
+
         foreach ($todasMesas as $m) {
             if ($m['numero'] == $mesa['numero']) {
                 $erros[] = "Número da mesa já existe.";
@@ -68,7 +71,7 @@ function validarMesa($mesa): array
 
     if (empty($mesa['cadeiras'])) {
         $erros[] = "Quantidade de cadeiras é obrigatória.";
-        
+
     } elseif (!is_numeric($mesa['cadeiras']) || $mesa['cadeiras'] < 1) {
         $erros[] = "Quantidade de cadeiras inválida.";
     }
@@ -78,4 +81,31 @@ function validarMesa($mesa): array
     }
 
     return $erros;
+}
+
+function alterarStatusMesa(){
+
+    $id = $_POST['id'] ?? null;
+    $status = $_POST['status'] ?? null;
+
+    
+
+    if(!$id || !$status) {
+        $_SESSION['erros'] = ["Selecione uma mesa para alterar o status."];
+        header('Location: ' . BASE_URL . '?rota=mesas');
+        exit();
+    }    
+
+    foreach($_SESSION['mesas'] as &$mesa) {
+        if($mesa['id'] == $id) {
+            $mesa['status'] = $status;
+            $_SESSION['sucesso'] = "Status da mesa alterado para " . ucfirst($status) . ".";
+            break;
+
+        }
+    }
+
+    header('Location: ' . BASE_URL . '?rota=mesas');
+    exit();
+
 }

@@ -17,35 +17,32 @@ document.getElementById('listaMesas').addEventListener('click', function (e) {
 function selecionarMesa(mesa) {
     document.getElementById('painel-numero').textContent = 'Mesa ' + mesa.numero;
     document.getElementById('painel-cadeiras').textContent = mesa.cadeiras;
-    document.getElementById('painel-status').textContent = mesa.status;
+    document.getElementById('painel-status').value = mesa.status;
+
+    console.log('Atualizando painel lateral com a mesa:', mesa);
     mesaSelecionada = mesa;
+
+    document.querySelectorAll('.input-mesa-id').forEach(input => {
+        input.value = mesa.id;
+    });
 
 }
 
 // Adiciona evento de clique a cada item do dropdown de status
 document.querySelectorAll('.status-mesa').forEach(item => {
     item.addEventListener('click', function (event) {
-        event.preventDefault();
-        const novoStatus = this.textContent;
+        event.preventDefault();        
 
-        console.log('Mesa selecionada Antes:', mesaSelecionada);
-        mesaSelecionada.status = novoStatus;
 
-        console.log('Status atualizado na mesa selecionada:', mesaSelecionada);
+        
 
         // Atualiza o texto do botão de status no painel lateral
-        document.getElementById('painel-status').textContent = novoStatus;
-
-        //Aqui encaminhará um put para o servidor para atualizar o status da mesa no backend,
-        // mas por enquanto, vamos apenas atualizar a cor do card da mesa no frontend
-        //se o backend retornar sucesso, atualizamos a cor do card da mesa
-
         atualizarCorMesa(mesaSelecionada, novoStatus);
 
     });
 });
 
-function atualizarCorMesa(mesa, novoStatus) {
+/*function atualizarCorMesa(mesa, novoStatus) {
     const card = [...document.querySelectorAll('.card-mesa')]
         .find(c => JSON.parse(c.dataset.mesa).numero === mesa.numero);
 
@@ -54,10 +51,10 @@ function atualizarCorMesa(mesa, novoStatus) {
         mesa.status = ucfirst(novoStatus);
         card.dataset.mesa = JSON.stringify(mesa);
     }
-}
+}*/
 
 
-function cadastrarMesa() {
+/*function cadastrarMesa() {
     const numero = document.getElementById('numero').value;
     const cadeiras = document.getElementById('cadeiras').value;
     const status = ucfirst(document.getElementById('status').value);
@@ -65,7 +62,7 @@ function cadastrarMesa() {
     adicionarCardMesa({ numero, cadeiras, status });
 
     bootstrap.Modal.getInstance(document.getElementById('modalMesa')).hide();
-}
+}*/
 
 function adicionarCardMesa(mesa) {
     const col = document.createElement('div');

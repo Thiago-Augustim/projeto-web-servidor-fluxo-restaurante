@@ -20,6 +20,10 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
     if($rota === 'mesas' && $acao === 'cadastrar') {
         cadastrarMesa();
     }
+    if($rota === 'mesas' && $acao === 'alterarStatusMesa') {
+        alterarStatusMesa();
+    }
+
 }
 
 match($rota) {

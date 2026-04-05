@@ -34,7 +34,7 @@ include VIEWS . 'partials/header.php';
                 <div class="p-3 rounded bg-cinzaClaro me-4 ms-4 flex-grow-1 rounded-4">
                     <div class="row g-3" id="listaMesas">
 
-                        <!-- Exibe erros caso algum dado de uma nova mesa seja inválido -->
+                        <!-- Caixa de erro caso algum dado de uma nova mesa seja inválido -->
                         <?php if (!empty($_SESSION['erros'])): ?>
                             <div class="toast-container position-fixed top-0 end-0 p-3">
                                 <div class="toast show" role="alert">
@@ -86,15 +86,40 @@ include VIEWS . 'partials/header.php';
 
                     <h5>Status:</h5>
                     <div class="dropdown">
-                        <button class="btn btn-secondary bg-light text-secondary dropdown-toggle p-2 ps-4 pe-4 " type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <span id="painel-status"></span>
-                        </button>
+                        
+                        <!-- Caixa de erros para alterar o status da mesa -->
+                        <?php if (!empty($_SESSION['erros'])): ?>
+                            <div class="toast-container position-fixed top-0 end-0 p-3">
+                                <div class="toast show" role="alert">
+                                    <div class="toast-header bg-danger text-white">
+                                        <strong class="me-auto">Erro</strong>
+                                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
+                                    </div>
+                                    <div class="toast-body">
+                                        <?php foreach ($_SESSION['erros'] as $erro): ?>
+                                            <p class="mb-1"><?= $erro ?></p>
+                                        <?php endforeach; ?>
+                                    </div>
+                                </div>
+                            </div>
+                            <?php unset($_SESSION['erros']); ?>
+                        <?php endif; ?>
 
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item status-mesa" href="#">Livre</a></li>
-                            <li><a class="dropdown-item status-mesa" href="#">Ocupada</a></li>
-                            <li><a class="dropdown-item status-mesa" href="#">Reservada</a></li>
-                        </ul>
+
+                        <form method="POST" action="<?= BASE_URL ?>?rota=mesas&amp;acao=alterarStatusMesa">
+
+                            <input type="hidden" name="id" class="input-mesa-id" value="">
+                                        
+                            <select name="status" class="form-select" id="painel-status">
+                                <option value="livre">Livre</option>
+                                <option value="ocupada">Ocupada</option>
+                                <option value="reservada">Reservada</option>
+                            </select>
+                            <button type="submit" class="btn mt-2"
+                                style="background-color: var(--buttonsColor); color: var(--branco)">
+                                Alterar
+                            </button>
+                        </form>
                     </div>
 
                 </div>
@@ -138,8 +163,8 @@ include VIEWS . 'partials/header.php';
                 </div>
 
                 <div class="modal-footer">
-                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button class="btn btn-primary" onclick="cadastrarMesa()">Cadastrar</button>
+                    <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">Cancelar</button>
+                    <button class="btn btn-primary" type="submit">Cadastrar</button>
                 </div>
 
             </div>
