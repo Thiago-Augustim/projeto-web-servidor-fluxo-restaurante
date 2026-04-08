@@ -9,7 +9,7 @@ function loginIndex(): void
     }
 
     //Se o funcionário já estiver logado, redireciona para a página de mesas
-    if (isset($_SESSION['funcionarioLogado'])) {
+    if ((isset($_SESSION['logado']) ) && $_SESSION['logado'] === "true") {
         header('Location: ' . BASE_URL . '?rota=mesas');
         exit();
     }
@@ -31,7 +31,6 @@ function login(): void
 
     $funcionarios = $_SESSION['funcionarios'] ?? [];
 
-
     $funcionarioEncontrado = null;
     foreach ($funcionarios as $funcionario) {
         if ($funcionario['nome'] === $nome && password_verify($senha, $funcionario['senha'])) {
@@ -41,6 +40,8 @@ function login(): void
     }
     if ($funcionarioEncontrado) {
         $_SESSION['funcionarioLogado'] = $funcionarioEncontrado;
+        $_SESSION['logado'] = "true";
+        
         header('Location: ' . BASE_URL . '?rota=mesas');
         exit();
     } else {
@@ -53,16 +54,15 @@ function login(): void
 function logout(): void
 {
 
-    $funcionarios = $_SESSION['funcionarios'] ?? null;
-    $mesas = $_SESSION['mesas'] ?? null;
+    //$funcionarios = $_SESSION['funcionarios'] ?? null;
+    //$mesas = $_SESSION['mesas'] ?? null;
     //$funcionarioLogado = $_SESSION['funcionarioLogado'] ?? null;
-    
 
     session_destroy();
-    session_start();
+    //session_start();
 
-    $_SESSION['funcionarios'] = $funcionarios;
-    $_SESSION['mesas'] = $mesas;
+    //$_SESSION['funcionarios'] = $funcionarios;
+    //$_SESSION['mesas'] = $mesas;
     //$_SESSION['funcionarioLogado'] = $funcionarioLogado;
 
     header('Location: ' . BASE_URL . '?rota=login');
