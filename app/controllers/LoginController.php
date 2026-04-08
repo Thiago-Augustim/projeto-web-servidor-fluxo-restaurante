@@ -53,16 +53,15 @@ function login(): void
 function logout(): void
 {
 
-    $funcionarios = $_SESSION['funcionarios'] ?? null;
-    $mesas = $_SESSION['mesas'] ?? null;
+    //$funcionarios = $_SESSION['funcionarios'] ?? null;
+    //$mesas = $_SESSION['mesas'] ?? null;
     //$funcionarioLogado = $_SESSION['funcionarioLogado'] ?? null;
-    
 
     session_destroy();
-    session_start();
+    //session_start();
 
-    $_SESSION['funcionarios'] = $funcionarios;
-    $_SESSION['mesas'] = $mesas;
+    //$_SESSION['funcionarios'] = $funcionarios;
+    //$_SESSION['mesas'] = $mesas;
     //$_SESSION['funcionarioLogado'] = $funcionarioLogado;
 
     header('Location: ' . BASE_URL . '?rota=login');
