@@ -34,11 +34,10 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($rota === 'pedidos' && $acao === 'adicionar') {
     adicionarPedido();
-
+    }
     if ($rota === 'pedidos' && $acao === 'alterarStatus') {
     alterarStatusPedido();
     }
-}
 
 }
 

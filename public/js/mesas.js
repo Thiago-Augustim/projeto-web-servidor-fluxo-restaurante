@@ -57,13 +57,13 @@ function renderizarPedidos(mesaId) {
     lista.innerHTML = html;
     document.getElementById('total-pedidos').textContent = total.toFixed(2).replace('.', ',');
 }
+
 // Adiciona evento de clique a cada item do dropdown de status
 document.querySelectorAll('.status-mesa').forEach(item => {
     item.addEventListener('click', function (event) {
-        event.preventDefault();        
+        event.preventDefault();
 
-
-        
+        const novoStatus = this.dataset.status; // ← correção aqui
 
         // Atualiza o texto do botão de status no painel lateral
         atualizarCorMesa(mesaSelecionada, novoStatus);
