@@ -4,12 +4,12 @@
 function mesasIndex(): void
 {
 
-   //Se não haver uma sessão de mesas, ele carrega as mesas do arquivo e salva na sessão
-   if(!isset($_SESSION['mesas'])){
+    //Se não haver uma sessão de mesas, ele carrega as mesas do arquivo e salva na sessão
+    if (!isset($_SESSION['mesas'])){
         $_SESSION['mesas'] = require MODELS . 'Mesas.php';
-   }
+    }
 
-   $mesas = $_SESSION['mesas'];
+    $mesas = $_SESSION['mesas'];
 
     require VIEWS . 'MesasView.php';
 }
@@ -71,7 +71,6 @@ function validarMesa($mesa): array
 
     if (empty($mesa['cadeiras'])) {
         $erros[] = "Quantidade de cadeiras é obrigatória.";
-
     } elseif (!is_numeric($mesa['cadeiras']) || $mesa['cadeiras'] < 1) {
         $erros[] = "Quantidade de cadeiras inválida.";
     }
@@ -83,29 +82,52 @@ function validarMesa($mesa): array
     return $erros;
 }
 
-function alterarStatusMesa(){
+function alterarStatusMesa()
+{
 
     $id = $_POST['id'] ?? null;
     $status = $_POST['status'] ?? null;
 
-    
 
-    if(!$id || !$status) {
+
+    if (!$id || !$status) {
         $_SESSION['erros'] = ["Selecione uma mesa para alterar o status."];
         header('Location: ' . BASE_URL . '?rota=mesas');
         exit();
-    }    
+    }
 
-    foreach($_SESSION['mesas'] as &$mesa) {
-        if($mesa['id'] == $id) {
+    foreach ($_SESSION['mesas'] as &$mesa) {
+        if ($mesa['id'] == $id) {
             $mesa['status'] = $status;
             $_SESSION['sucesso'] = "Status da mesa alterado para " . ucfirst($status) . ".";
             break;
-
         }
     }
 
     header('Location: ' . BASE_URL . '?rota=mesas');
     exit();
+}
 
+function excluirMesa(): void
+{
+    $id = $_POST['id'];
+
+    // Usamos $index => $mesa para pegar a posição exata no array
+    foreach ($_SESSION['mesas'] as $index => $mesa) {
+        if ($mesa['id'] == $id) {
+
+            if ($mesa['status'] === 'livre') {
+                unset($_SESSION['mesas'][$index]);
+                break;
+            }else{
+                $_SESSION['errosExclusao'] []= "A mesa deve estar livre para ser Excluida";
+                break;
+            }
+
+            //$_SESSION['mesas'] = array_values($_SESSION['mesas']);
+        }
+    }
+
+    header('Location: ' . BASE_URL . '?rota=mesas');
+    exit();
 }

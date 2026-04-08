@@ -86,7 +86,7 @@ include VIEWS . 'partials/header.php';
 
                     <h5>Status:</h5>
                     <div class="dropdown">
-                        
+
                         <!-- Caixa de erros para alterar o status da mesa -->
                         <?php if (!empty($_SESSION['erros'])): ?>
                             <div class="toast-container position-fixed top-0 end-0 p-3">
@@ -109,16 +109,25 @@ include VIEWS . 'partials/header.php';
                         <form method="POST" action="<?= BASE_URL ?>?rota=mesas&amp;acao=alterarStatusMesa">
 
                             <input type="hidden" name="id" class="input-mesa-id" value="">
-                                        
+
                             <select name="status" class="form-select" id="painel-status">
                                 <option value="livre">Livre</option>
                                 <option value="ocupada">Ocupada</option>
                                 <option value="reservada">Reservada</option>
                             </select>
-                            <button type="submit" class="btn mt-2"
-                                style="background-color: var(--buttonsColor); color: var(--branco)">
-                                Alterar
-                            </button>
+
+                            <div class="d-flex justify-content-between mt-2">
+                                <button type="submit" class="btn mt-2"
+                                    style="background-color: var(--buttonsColor); color: var(--branco)">
+                                    Alterar
+                                </button>
+
+                                <button type="submit"
+                                        formaction="<?= BASE_URL ?>?rota=mesas&amp;acao=excluirMesa"
+                                        class="btn mt-2 btn-danger">
+                                    Excluir Mesa
+                                </button>
+                            </div>
                         </form>
                     </div>
 
@@ -170,6 +179,24 @@ include VIEWS . 'partials/header.php';
             </div>
         </div>
     </form>
+
+    <!-- Caixa de erros para alterar o status da mesa -->
+                        <?php if (!empty($_SESSION['errosExclusao'])): ?>
+                            <div class="toast-container position-fixed top-0 end-0 p-3">
+                                <div class="toast show" role="alert">
+                                    <div class="toast-header bg-danger text-white">
+                                        <strong class="me-auto">Erro</strong>
+                                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
+                                    </div>
+                                    <div class="toast-body">
+                                        <?php foreach ($_SESSION['errosExclusao'] as $erroExclusao): ?>
+                                            <p class="mb-1"><?= $erroExclusao ?></p>
+                                        <?php endforeach; ?>
+                                    </div>
+                                </div>
+                            </div>
+                            <?php unset($_SESSION['errosExclusao']); ?>
+                        <?php endif; ?>
 
     <?php
 

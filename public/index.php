@@ -8,7 +8,7 @@ define('BASE_URL', '/projeto-fluxo-restaurante/public/index.php');
 define('CONTROLLERS', ROOT . 'app/controllers/');
 
 require CONTROLLERS . 'MesasController.php';
-require CONTROLLERS . 'AuthController.php';
+require CONTROLLERS . 'LoginController.php';
 require CONTROLLERS . 'FuncionariosController.php';
 
 session_start();
@@ -23,6 +23,9 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     if($rota === 'mesas' && $acao === 'alterarStatusMesa') {
         alterarStatusMesa();
+    }
+    if($rota ==='mesas' && $acao === 'excluirMesa'){
+        excluirMesa();
     }
     if ($rota === 'funcionarios' && $acao === 'cadastrar') {
         cadastrarFuncionario();
