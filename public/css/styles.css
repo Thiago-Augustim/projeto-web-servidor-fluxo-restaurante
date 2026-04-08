@@ -55,7 +55,3 @@
     opacity: 0.8;
 }
 
-.badge-aguardando { background-color: #b0b0b0 !important; }
-.badge-cancelado  { background-color: #6c6c6c !important; }
-.badge-em_preparo { background-color: #c9a227 !important; }
-.badge-concluido  { background-color: #4caf50 !important; }
