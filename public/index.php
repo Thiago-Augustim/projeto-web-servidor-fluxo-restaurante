@@ -27,6 +27,9 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($rota === 'funcionarios' && $acao === 'cadastrar') {
         cadastrarFuncionario();
     }
+    if ($rota === 'funcionarios' && $acao === 'excluir') {
+        excluirFuncionario();
+    }
     if ($rota === 'login' && $acao === 'entrar') {
         login();
     }

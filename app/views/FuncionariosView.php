@@ -68,6 +68,13 @@ include VIEWS . 'partials/header.php';
                 <p id="painel-especialidade" class="border bg-light d-inline-block p-2 ps-3 pe-3 rounded-3">
                     <b>--</b>
                 </p>
+                <form method="POST" action="<?= BASE_URL ?>?rota=funcionarios&acao=excluir" id="form-excluir">
+                    <input type="hidden" name="id" id="input-excluir-id">
+    
+                    <button type="submit" class="btn btn-danger w-100 mt-3">
+                     Excluir Funcionário
+                    </button>
+                </form>
 
             </div>
 
