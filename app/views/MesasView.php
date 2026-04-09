@@ -34,23 +34,7 @@ include VIEWS . 'partials/header.php';
                 <div class="p-3 rounded bg-cinzaClaro me-4 ms-4 flex-grow-1 rounded-4">
                     <div class="row g-3" id="listaMesas">
 
-                        <!-- Caixa de erro caso algum dado de uma nova mesa seja inválido -->
-                        <?php if (!empty($_SESSION['erros'])): ?>
-                            <div class="toast-container position-fixed top-0 end-0 p-3">
-                                <div class="toast show" role="alert">
-                                    <div class="toast-header bg-danger text-white">
-                                        <strong class="me-auto">Erro</strong>
-                                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
-                                    </div>
-                                    <div class="toast-body">
-                                        <?php foreach ($_SESSION['erros'] as $erro): ?>
-                                            <p class="mb-1"><?= $erro ?></p>
-                                        <?php endforeach; ?>
-                                    </div>
-                                </div>
-                            </div>
-                            <?php unset($_SESSION['erros']); ?>
-                        <?php endif; ?>
+
 
                         <!-- Faz um foreach em um array de mesas e preenche na tela -->
                         <?php foreach ($mesas as $mesa): ?>
@@ -87,23 +71,7 @@ include VIEWS . 'partials/header.php';
                     <h5>Status:</h5>
                     <div class="dropdown">
 
-                        <!-- Caixa de erros para alterar o status da mesa -->
-                        <?php if (!empty($_SESSION['erros'])): ?>
-                            <div class="toast-container position-fixed top-0 end-0 p-3">
-                                <div class="toast show" role="alert">
-                                    <div class="toast-header bg-danger text-white">
-                                        <strong class="me-auto">Erro</strong>
-                                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
-                                    </div>
-                                    <div class="toast-body">
-                                        <?php foreach ($_SESSION['erros'] as $erro): ?>
-                                            <p class="mb-1"><?= $erro ?></p>
-                                        <?php endforeach; ?>
-                                    </div>
-                                </div>
-                            </div>
-                            <?php unset($_SESSION['erros']); ?>
-                        <?php endif; ?>
+
 
 
                         <form method="POST" action="<?= BASE_URL ?>?rota=mesas&amp;acao=alterarStatusMesa">
@@ -123,8 +91,8 @@ include VIEWS . 'partials/header.php';
                                 </button>
 
                                 <button type="submit"
-                                        formaction="<?= BASE_URL ?>?rota=mesas&amp;acao=excluirMesa"
-                                        class="btn mt-2 btn-danger">
+                                    formaction="<?= BASE_URL ?>?rota=mesas&amp;acao=excluirMesa"
+                                    class="btn mt-2 btn-danger">
                                     Excluir Mesa
                                 </button>
                             </div>
@@ -147,9 +115,9 @@ include VIEWS . 'partials/header.php';
                         Cardápio
                     </button>
                 </div>
-
-            </div>
+ 
         </div>
+    </div>
     </div>
 
     <!-- Modal de Cadastro de Mesa -->
@@ -244,6 +212,7 @@ include VIEWS . 'partials/header.php';
 </script>
 
     <?php
-
-
-    include VIEWS . 'partials/footer.php';
+    include VIEWS . 'components/Error.php';
+    include VIEWS . 'components/ModalCardapio.php';
+    include VIEWS . 'partials/Footer.php';
+    ?>

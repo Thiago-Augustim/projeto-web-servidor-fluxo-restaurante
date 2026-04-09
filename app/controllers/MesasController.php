@@ -3,13 +3,13 @@
 
 function mesasIndex(): void
 {
-    if(!isset($_SESSION['logado'])){
+    if (!isset($_SESSION['logado'])) {
         header("Location: " . BASE_URL . "?rota=login");
         exit();
     }
 
     //Se não haver uma sessão de mesas, ele carrega as mesas do arquivo e salva na sessão
-    if (!isset($_SESSION['mesas'])){
+    if (!isset($_SESSION['mesas'])) {
         $_SESSION['mesas'] = require MODELS . 'Mesas.php';
     }
 
@@ -116,6 +116,10 @@ function excluirMesa(): void
 {
     $id = $_POST['id'];
 
+    if ($id === "") {
+        $_SESSION['erros'][] = "Selecione uma mesa antes de exluir";
+    }
+
     // Usamos $index => $mesa para pegar a posição exata no array
     foreach ($_SESSION['mesas'] as $index => $mesa) {
         if ($mesa['id'] == $id) {
@@ -123,8 +127,8 @@ function excluirMesa(): void
             if ($mesa['status'] === 'livre') {
                 unset($_SESSION['mesas'][$index]);
                 break;
-            }else{
-                $_SESSION['errosExclusao'] []= "A mesa deve estar livre para ser Excluida";
+            } else {
+                $_SESSION['erros'][] = "A mesa deve estar livre para ser Excluida";
                 break;
             }
 
