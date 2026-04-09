@@ -10,9 +10,9 @@ define('CONTROLLERS', ROOT . 'app/controllers/');
 require CONTROLLERS . 'MesasController.php';
 require CONTROLLERS . 'LoginController.php';
 require CONTROLLERS . 'FuncionariosController.php';
+require CONTROLLERS . 'PedidosController.php';
 
 session_start();
-
 
 $rota = $_GET['rota'] ?? 'login';
 $acao = $_GET['acao'] ?? 'index';

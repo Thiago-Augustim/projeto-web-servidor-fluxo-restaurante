@@ -41,6 +41,7 @@ function login(): void
     if ($funcionarioEncontrado) {
         $_SESSION['funcionarioLogado'] = $funcionarioEncontrado;
         $_SESSION['logado'] = "true";
+        $_SESSION['pedidos'] = null;
         
         header('Location: ' . BASE_URL . '?rota=mesas');
         exit();
