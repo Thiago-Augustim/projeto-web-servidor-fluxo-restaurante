@@ -3,13 +3,13 @@
 
 function mesasIndex(): void
 {
-    if(!isset($_SESSION['logado'])){
+    if (!isset($_SESSION['logado'])) {
         header("Location: " . BASE_URL . "?rota=login");
         exit();
     }
 
     //Se não haver uma sessão de mesas, ele carrega as mesas do arquivo e salva na sessão
-    if (!isset($_SESSION['mesas'])){
+    if (!isset($_SESSION['mesas'])) {
         $_SESSION['mesas'] = require MODELS . 'Mesas.php';
     }
 
@@ -45,6 +45,10 @@ function cadastrarMesa(): void
     ];
     $_SESSION['mesas'] = $mesasSessao;
 
+    usort($_SESSION['mesas'], function($a, $b) {
+        return $a['numero'] <=> $b['numero'];
+    });
+
     header('Location: ' . BASE_URL . '?rota=mesas');
     exit();
 }
@@ -61,11 +65,10 @@ function validarMesa($mesa): array
     } else {
 
         //verifica duplicidade do numero da mesa
-        $mesas = require MODELS . 'Mesas.php';
+        //$mesas = require MODELS . 'Mesas.php';
         $mesasSessao = $_SESSION['mesas'] ?? [];
-        $todasMesas = array_merge($mesas, $mesasSessao);
 
-        foreach ($todasMesas as $m) {
+        foreach ($mesasSessao as $m) {
             if ($m['numero'] == $mesa['numero']) {
                 $erros[] = "Número da mesa já existe.";
                 break;
@@ -89,19 +92,19 @@ function validarMesa($mesa): array
 function alterarStatusMesa()
 {
 
-    $id = $_POST['id'] ?? null;
+    $numeroMesa = $_POST['numeroMesa'] ?? null;
     $status = $_POST['status'] ?? null;
 
 
 
-    if (!$id || !$status) {
+    if (!$numeroMesa || !$status) {
         $_SESSION['erros'] = ["Selecione uma mesa para alterar o status."];
         header('Location: ' . BASE_URL . '?rota=mesas');
         exit();
     }
 
     foreach ($_SESSION['mesas'] as &$mesa) {
-        if ($mesa['id'] == $id) {
+        if ($mesa['numero'] == $numeroMesa) {
             $mesa['status'] = $status;
             $_SESSION['sucesso'] = "Status da mesa alterado para " . ucfirst($status) . ".";
             break;
@@ -114,17 +117,21 @@ function alterarStatusMesa()
 
 function excluirMesa(): void
 {
-    $id = $_POST['id'];
+    $numeroMesa = $_POST['numeroMesa'];
+
+    if ($numeroMesa === "") {
+        $_SESSION['erros'][] = "Selecione uma mesa antes de exluir";
+    }
 
     // Usamos $index => $mesa para pegar a posição exata no array
     foreach ($_SESSION['mesas'] as $index => $mesa) {
-        if ($mesa['id'] == $id) {
+        if ($mesa['numero'] == $numeroMesa) {
 
             if ($mesa['status'] === 'livre') {
                 unset($_SESSION['mesas'][$index]);
                 break;
-            }else{
-                $_SESSION['errosExclusao'] []= "A mesa deve estar livre para ser Excluida";
+            } else {
+                $_SESSION['erros'][] = "A mesa deve estar livre para ser Excluida";
                 break;
             }
 

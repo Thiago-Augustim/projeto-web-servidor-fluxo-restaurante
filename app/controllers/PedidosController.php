@@ -2,14 +2,11 @@
 
 function pedidosIndex(): void
 {
-    if (!isset($_SESSION['mesas'])) {
-        $_SESSION['mesas'] = require MODELS . 'Mesas.php';
-    }
+   
     if (!isset($_SESSION['pedidos'])) {
         $_SESSION['pedidos'] = require MODELS . 'Pedidos.php';
     }
 
-    $mesas   = $_SESSION['mesas'];
     $pedidos = $_SESSION['pedidos'];
 
     require VIEWS . 'PedidosView.php';
@@ -33,9 +30,11 @@ function cadastrarPedido(): void
 
     $_SESSION['pedidos'] [] = [
         'id' => count($_SESSION['pedidos']) + 1,
-        'NumeroMesa' => $numeroMesa,
+        'numeroMesa' => $numeroMesa,
+        'status' => "aguardando",
         'itens'=> $itens
     ];
+
 
     header('Location: ' . BASE_URL . '?rota=mesas');
     exit();

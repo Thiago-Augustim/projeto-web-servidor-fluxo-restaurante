@@ -32,25 +32,9 @@ include VIEWS . 'partials/header.php';
 
                 <!-- Container de Mesas -->
                 <div class="p-3 rounded bg-cinzaClaro me-4 ms-4 flex-grow-1 rounded-4">
-                    <div class="row g-3" id="listaMesas">
+                    <div class="row g-4" id="listaMesas">
 
-                        <!-- Caixa de erro caso algum dado de uma nova mesa seja inválido -->
-                        <?php if (!empty($_SESSION['erros'])): ?>
-                            <div class="toast-container position-fixed top-0 end-0 p-3">
-                                <div class="toast show" role="alert">
-                                    <div class="toast-header bg-danger text-white">
-                                        <strong class="me-auto">Erro</strong>
-                                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
-                                    </div>
-                                    <div class="toast-body">
-                                        <?php foreach ($_SESSION['erros'] as $erro): ?>
-                                            <p class="mb-1"><?= $erro ?></p>
-                                        <?php endforeach; ?>
-                                    </div>
-                                </div>
-                            </div>
-                            <?php unset($_SESSION['erros']); ?>
-                        <?php endif; ?>
+
 
                         <!-- Faz um foreach em um array de mesas e preenche na tela -->
                         <?php foreach ($mesas as $mesa): ?>
@@ -87,28 +71,12 @@ include VIEWS . 'partials/header.php';
                     <h5>Status:</h5>
                     <div class="dropdown">
 
-                        <!-- Caixa de erros para alterar o status da mesa -->
-                        <?php if (!empty($_SESSION['erros'])): ?>
-                            <div class="toast-container position-fixed top-0 end-0 p-3">
-                                <div class="toast show" role="alert">
-                                    <div class="toast-header bg-danger text-white">
-                                        <strong class="me-auto">Erro</strong>
-                                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
-                                    </div>
-                                    <div class="toast-body">
-                                        <?php foreach ($_SESSION['erros'] as $erro): ?>
-                                            <p class="mb-1"><?= $erro ?></p>
-                                        <?php endforeach; ?>
-                                    </div>
-                                </div>
-                            </div>
-                            <?php unset($_SESSION['erros']); ?>
-                        <?php endif; ?>
+
 
 
                         <form method="POST" action="<?= BASE_URL ?>?rota=mesas&amp;acao=alterarStatusMesa">
 
-                            <input type="hidden" name="id" class="input-mesa-id" value="">
+                            <input type="hidden" name="numeroMesa" class="input-mesa-id" value="">
 
                             <select name="status" class="form-select" id="painel-status">
                                 <option value="livre">Livre</option>
@@ -123,8 +91,8 @@ include VIEWS . 'partials/header.php';
                                 </button>
 
                                 <button type="submit"
-                                        formaction="<?= BASE_URL ?>?rota=mesas&amp;acao=excluirMesa"
-                                        class="btn mt-2 btn-danger">
+                                    formaction="<?= BASE_URL ?>?rota=mesas&amp;acao=excluirMesa"
+                                    class="btn mt-2 btn-danger">
                                     Excluir Mesa
                                 </button>
                             </div>
@@ -135,7 +103,17 @@ include VIEWS . 'partials/header.php';
 
                 <div class="p-3 bg-cinzaClaro rounded-4 me-4 ms-4 flex-grow-1">
                     <h5>Pedidos da Mesa</h5>
-                    
+                    <div class="d-flex justify-content-center bg">
+
+                        <form action="">
+                            <input id="input-mesa-id-pedido" type="hidden" value="">
+                            <input id="input-mesa-status-pedido" type="hidden" value="">
+                            <button id="btn-adicionar-pedido" class="btn px-5 btn-hover" style="background-color: var(--buttonsColor); color: var(--branco)" type="button">
+                                Adicionar Pedido
+                            </button>
+
+                        </form>
+                    </div>
                 </div>
 
             </div>
@@ -180,29 +158,8 @@ include VIEWS . 'partials/header.php';
         </div>
     </form>
 
-    <!-- Caixa de erros para alterar o status da mesa -->
-                        <?php if (!empty($_SESSION['errosExclusao'])): ?>
-                            <div class="toast-container position-fixed top-0 end-0 p-3">
-                                <div class="toast show" role="alert">
-                                    <div class="toast-header bg-danger text-white">
-                                        <strong class="me-auto">Erro</strong>
-                                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
-                                    </div>
-                                    <div class="toast-body">
-                                        <?php foreach ($_SESSION['errosExclusao'] as $erroExclusao): ?>
-                                            <p class="mb-1"><?= $erroExclusao ?></p>
-                                        <?php endforeach; ?>
-                                    </div>
-                                </div>
-                            </div>
-                            <?php unset($_SESSION['errosExclusao']); ?>
-                        <?php endif; ?>
-    <!-- Modal Cardápio -->
-<script>
-    const todosPedidos = <?= json_encode(array_values($_SESSION['pedidos'] ?? [])) ?>;
-</script>
-
     <?php
-
-
-    include VIEWS . 'partials/footer.php';
+    include VIEWS . 'components/Error.php';
+    include VIEWS . 'components/ModalCardapio.php';
+    include VIEWS . 'partials/Footer.php';
+    ?>

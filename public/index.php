@@ -14,7 +14,6 @@ require CONTROLLERS . 'PedidosController.php';
 
 session_start();
 
-
 $rota = $_GET['rota'] ?? 'login';
 $acao = $_GET['acao'] ?? 'index';
 
@@ -36,6 +35,9 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     if ($rota === 'login' && $acao === 'entrar') {
         login();
+    }
+    if($rota === 'pedidos' && $acao === 'cadastrar') {
+    cadastrarPedido();
     }
 
     
