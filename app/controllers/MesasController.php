@@ -92,19 +92,19 @@ function validarMesa($mesa): array
 function alterarStatusMesa()
 {
 
-    $id = $_POST['id'] ?? null;
+    $numeroMesa = $_POST['numeroMesa'] ?? null;
     $status = $_POST['status'] ?? null;
 
 
 
-    if (!$id || !$status) {
+    if (!$numeroMesa || !$status) {
         $_SESSION['erros'] = ["Selecione uma mesa para alterar o status."];
         header('Location: ' . BASE_URL . '?rota=mesas');
         exit();
     }
 
     foreach ($_SESSION['mesas'] as &$mesa) {
-        if ($mesa['id'] == $id) {
+        if ($mesa['numero'] == $numeroMesa) {
             $mesa['status'] = $status;
             $_SESSION['sucesso'] = "Status da mesa alterado para " . ucfirst($status) . ".";
             break;
@@ -117,15 +117,15 @@ function alterarStatusMesa()
 
 function excluirMesa(): void
 {
-    $id = $_POST['id'];
+    $numeroMesa = $_POST['numeroMesa'];
 
-    if ($id === "") {
+    if ($numeroMesa === "") {
         $_SESSION['erros'][] = "Selecione uma mesa antes de exluir";
     }
 
     // Usamos $index => $mesa para pegar a posição exata no array
     foreach ($_SESSION['mesas'] as $index => $mesa) {
-        if ($mesa['id'] == $id) {
+        if ($mesa['numero'] == $numeroMesa) {
 
             if ($mesa['status'] === 'livre') {
                 unset($_SESSION['mesas'][$index]);

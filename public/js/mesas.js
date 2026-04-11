@@ -25,10 +25,10 @@ function selecionarMesa(mesa) {
     mesaSelecionada = mesa;
 
     document.querySelectorAll('.input-mesa-id').forEach(input => {
-        input.value = mesa.id;
+        input.value = mesa.numero;
     });
 
-    document.getElementById('input-mesa-id-pedido').value = mesa.id;
+    document.getElementById('input-mesa-id-pedido').value = mesa.numero;
     document.getElementById('input-mesa-status-pedido').value = mesa.status;
 
 }
@@ -60,10 +60,10 @@ document.addEventListener("DOMContentLoaded", function () {
     //Validação da mesa
     btnAdicionar.addEventListener('click', function (e) {
         e.preventDefault();
-        const inputMesaId = document.getElementById('input-mesa-id-pedido');
+        const inputMesaNumero = document.getElementById('input-mesa-id-pedido');
         const inputMesaStatus = document.getElementById('input-mesa-status-pedido');
 
-        if (inputMesaId.value === "" || inputMesaStatus.value !== 'ocupada') {
+        if (inputMesaNumero.value === "" || inputMesaStatus.value !== 'ocupada') {
             exibirErro("Selecione uma mesa ocupada!");
             return;
         }
@@ -73,20 +73,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
     //Preenche os dados nos inputs no modal somente quando estiver carregado
     modalElement.addEventListener('shown.bs.modal', function () {
-        const idDaMesa = document.getElementById('input-mesa-id-pedido').value;
+        const numeroMesa = document.getElementById('input-mesa-id-pedido').value;
         
-        console.log("Modal aberto! Sincronizando mesa agora: " + idDaMesa);
+        console.log("Modal aberto! Sincronizando mesa agora: " + numeroMesa);
 
         // Preenche o input 
         const inputModal = document.getElementById('input-mesa-pedido');
-        if (inputModal) inputModal.value = idDaMesa;
+        if (inputModal) inputModal.value = numeroMesa;
 
         // Preenche o texto visual
         const divExibirMesa = document.getElementById('display-numero-mesa');
         if (divExibirMesa) {
 
             // Se mesaSelecionada.numero falhar, usamos o ID que está no log
-            divExibirMesa.innerText = "Mesa: " + (mesaSelecionada.numero || idDaMesa);
+            divExibirMesa.innerText = "Mesa: " + (mesaSelecionada.numero || numeroMesa);
         }
     });
 });

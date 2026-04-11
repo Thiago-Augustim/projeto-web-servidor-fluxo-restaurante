@@ -76,7 +76,7 @@ include VIEWS . 'partials/header.php';
 
                         <form method="POST" action="<?= BASE_URL ?>?rota=mesas&amp;acao=alterarStatusMesa">
 
-                            <input type="hidden" name="id" class="input-mesa-id" value="">
+                            <input type="hidden" name="numeroMesa" class="input-mesa-id" value="">
 
                             <select name="status" class="form-select" id="painel-status">
                                 <option value="livre">Livre</option>
