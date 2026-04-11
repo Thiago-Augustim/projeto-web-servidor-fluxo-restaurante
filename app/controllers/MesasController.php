@@ -45,6 +45,10 @@ function cadastrarMesa(): void
     ];
     $_SESSION['mesas'] = $mesasSessao;
 
+    usort($_SESSION['mesas'], function($a, $b) {
+        return $a['numero'] <=> $b['numero'];
+    });
+
     header('Location: ' . BASE_URL . '?rota=mesas');
     exit();
 }
@@ -61,11 +65,10 @@ function validarMesa($mesa): array
     } else {
 
         //verifica duplicidade do numero da mesa
-        $mesas = require MODELS . 'Mesas.php';
+        //$mesas = require MODELS . 'Mesas.php';
         $mesasSessao = $_SESSION['mesas'] ?? [];
-        $todasMesas = array_merge($mesas, $mesasSessao);
 
-        foreach ($todasMesas as $m) {
+        foreach ($mesasSessao as $m) {
             if ($m['numero'] == $mesa['numero']) {
                 $erros[] = "Número da mesa já existe.";
                 break;

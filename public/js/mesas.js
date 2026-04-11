@@ -1,7 +1,7 @@
 // Script mesas
-let mesaSelecionada = [
-    { id: null, numero: null, cadeiras: null, status: null },
-]
+let mesaSelecionada =
+    { id: null, numero: null, cadeiras: null, status: null };
+
 
 // Adiciona evento de clique a cada card de mesa
 document.getElementById('listaMesas').addEventListener('click', function (e) {
@@ -12,6 +12,7 @@ document.getElementById('listaMesas').addEventListener('click', function (e) {
     console.log('Mesa selecionada:', mesa);
     selecionarMesa(mesa);
 });
+
 
 // Função para atualizar o painel lateral com os detalhes da mesa selecionada
 function selecionarMesa(mesa) {
@@ -26,6 +27,7 @@ function selecionarMesa(mesa) {
     document.querySelectorAll('.input-mesa-id').forEach(input => {
         input.value = mesa.id;
     });
+
     document.getElementById('input-mesa-id-pedido').value = mesa.id;
     document.getElementById('input-mesa-status-pedido').value = mesa.status;
 
@@ -36,107 +38,63 @@ document.querySelectorAll('.status-mesa').forEach(item => {
     item.addEventListener('click', function (event) {
         event.preventDefault();
 
-
-
-
         // Atualiza o texto do botão de status no painel lateral
         atualizarCorMesa(mesaSelecionada, novoStatus);
 
     });
 });
 
-/*function atualizarCorMesa(mesa, novoStatus) {
-    const card = [...document.querySelectorAll('.card-mesa')]
-        .find(c => JSON.parse(c.dataset.mesa).numero === mesa.numero);
-
-    if (card) {
-        card.style.backgroundColor = `var(--mesa${novoStatus}Color)`;
-        mesa.status = ucfirst(novoStatus);
-        card.dataset.mesa = JSON.stringify(mesa);
-    }
-}*/
-
-
-/*function cadastrarMesa() {
-    const numero = document.getElementById('numero').value;
-    const cadeiras = document.getElementById('cadeiras').value;
-    const status = ucfirst(document.getElementById('status').value);
-
-    adicionarCardMesa({ numero, cadeiras, status });
-
-    bootstrap.Modal.getInstance(document.getElementById('modalMesa')).hide();
-}*/
-
-function adicionarCardMesa(mesa) {
-    const col = document.createElement('div');
-    col.className = 'col-6 col-sm-4 col-md-3 col-lg-3';
-    col.innerHTML = `
-        <div class="card text-center p-3 rounded card-mesa"
-            style="background-color: var(--mesa${ucfirst(mesa.status)}Color);"
-            data-mesa='${JSON.stringify(mesa)}'>
-            <strong>Mesa ${mesa.numero}</strong>
-            <span>Cadeiras: ${mesa.cadeiras}</span>
-        </div>
-    `;
-    document.getElementById('listaMesas').appendChild(col);
-}
-
 function ucfirst(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-
-
-
 document.addEventListener("DOMContentLoaded", function () {
-
     const modalElement = document.getElementById('modalCardapio');
     const btnAdicionar = document.getElementById('btn-adicionar-pedido');
 
-    // 1. Cria o modal
     let modalCardapio = null;
     if (modalElement && typeof bootstrap !== 'undefined') {
         modalCardapio = new bootstrap.Modal(modalElement);
     }
 
-
+    //Validação da mesa
     btnAdicionar.addEventListener('click', function (e) {
-        e.preventDefault(); // Impede comportamentos estranhos do botão
-
+        e.preventDefault();
         const inputMesaId = document.getElementById('input-mesa-id-pedido');
         const inputMesaStatus = document.getElementById('input-mesa-status-pedido');
 
-        //VALIDAÇÕES
-        if (inputMesaId.value === "") {
-            exibirErro("Por favor, selecione ou informe o número da mesa!");
+        if (inputMesaId.value === "" || inputMesaStatus.value !== 'ocupada') {
+            exibirErro("Selecione uma mesa ocupada!");
             return;
         }
 
-        if (inputMesaStatus.value === 'livre' || inputMesaStatus.value === 'reservada') {
-            exibirErro("A mesa deve estar ocupada para fazer um pedido!");
-            return;
-        }
-
-        //SINCRONIZAÇÃO
-        // const inputsNoModal = document.querySelectorAll('.input-mesa-selecionada');
-        // inputsNoModal.forEach(input => {
-        //     input.value = inputMesaId.value;
-        // });
-
-        //ABERTURA DO MODAL
-        if (modalCardapio) {
-            modalCardapio.show();
-        }
-
+        modalCardapio.show();
     });
 
+    //Preenche os dados nos inputs no modal somente quando estiver carregado
+    modalElement.addEventListener('shown.bs.modal', function () {
+        const idDaMesa = document.getElementById('input-mesa-id-pedido').value;
+        
+        console.log("Modal aberto! Sincronizando mesa agora: " + idDaMesa);
+
+        // Preenche o input 
+        const inputModal = document.getElementById('input-mesa-pedido');
+        if (inputModal) inputModal.value = idDaMesa;
+
+        // Preenche o texto visual
+        const divExibirMesa = document.getElementById('display-numero-mesa');
+        if (divExibirMesa) {
+
+            // Se mesaSelecionada.numero falhar, usamos o ID que está no log
+            divExibirMesa.innerText = "Mesa: " + (mesaSelecionada.numero || idDaMesa);
+        }
+    });
 });
 
 
 
 function exibirErro(mensagem) {
     const container = document.getElementById('container-erros');
-
     const htmlErro = `<div class="toast-container position-fixed top-0 end-0 p-3">
         <div class="toast show" role="alert">
             <div class="toast-header bg-danger text-white">
@@ -150,5 +108,34 @@ function exibirErro(mensagem) {
     </div>`
 
     container.innerHTML = htmlErro;
+}
+
+
+function adicionarAoPedido(id, nome, preco, inputQtdId) {
+    const qtd = document.getElementById(inputQtdId).value;
+    const containerInputs = document.getElementById('lista-inputs-hidden');
+    const listaVisual = document.getElementById('lista-visual-pedido');
+
+
+    // Remove a mensagem de "Nenhum item" se for o primeiro item
+    if (containerInputs.innerHTML === "") {
+        listaVisual.innerHTML = "";
+    }
+
+    //Criando inputs hidden no formato de array para o PHP: itens[id][campo]
+    containerInputs.innerHTML += `
+        <input type="hidden" name="itens[${id}][id]" value="${id}">
+        <input type="hidden" name="itens[${id}][nome]" value="${nome}">
+        <input type="hidden" name="itens[${id}][quantidade]" value="${qtd}">
+        <input type="hidden" name="itens[${id}][preco]" value="${preco}">
+        <input type="hidden" name="itens[${id}][valorTotal]" value="${(preco*qtd)}">
+
+    `;
+
+    //Atualizando a lista visual
+    const li = document.createElement('li');
+    li.className = "list-group-item d-flex justify-content-between align-items-center";
+    li.innerHTML = `${nome} (x${qtd}) <span>R$ ${(preco * qtd).toFixed(2)}</span>`;
+    listaVisual.appendChild(li);
 
 }

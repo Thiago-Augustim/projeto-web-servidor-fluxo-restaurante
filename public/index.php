@@ -36,6 +36,10 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($rota === 'login' && $acao === 'entrar') {
         login();
     }
+    if($rota === 'pedidos' && $acao === 'cadastrar') {
+    //Envia a requisição ao pedidosController
+
+    }
 
 }
 
