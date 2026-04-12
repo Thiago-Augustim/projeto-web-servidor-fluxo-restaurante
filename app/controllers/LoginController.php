@@ -42,8 +42,18 @@ function login(): void
         $_SESSION['funcionarioLogado'] = $funcionarioEncontrado;
         $_SESSION['logado'] = "true";
         $_SESSION['pedidos'] = null;
+        $_SESSION['usuarioEspecialidade'] = $funcionarioEncontrado['especialidade'];
+
+            if($funcionarioEncontrado['especialidade'] === 'garcom'){
+                header('Location: ' . BASE_URL . '?rota=mesas');
+            }
+            if($funcionarioEncontrado['especialidade'] === 'cozinha'){
+                header('Location: ' . BASE_URL . '?rota=pedidos');
+            }
+            if($funcionarioEncontrado['especialidade'] === 'gerente'){
+                header('Location: ' . BASE_URL . '?rota=mesas');
+            }
         
-        header('Location: ' . BASE_URL . '?rota=mesas');
         exit();
     } else {
         $_SESSION['erros'] = ['usuario ou senha inválidos.'];

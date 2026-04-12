@@ -1,5 +1,5 @@
 <?php
-
+require_once MIDDLEWARES . 'Auth.php';
 
 function mesasIndex(): void
 {
@@ -7,6 +7,9 @@ function mesasIndex(): void
         header("Location: " . BASE_URL . "?rota=login");
         exit();
     }
+
+    global $permissoes;
+    validarAcesso($permissoes);
 
     //Se não haver uma sessão de mesas, ele carrega as mesas do arquivo e salva na sessão
     if (!isset($_SESSION['mesas'])) {

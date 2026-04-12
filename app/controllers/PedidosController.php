@@ -1,11 +1,17 @@
 <?php
 
+require_once MIDDLEWARES . 'Auth.php';
+
 function pedidosIndex(): void
 {
    
     if (!isset($_SESSION['pedidos'])) {
         $_SESSION['pedidos'] = require MODELS . 'Pedidos.php';
     }
+
+    global $permissoes;
+    validarAcesso($permissoes);
+
 
     $pedidos = $_SESSION['pedidos'];
 

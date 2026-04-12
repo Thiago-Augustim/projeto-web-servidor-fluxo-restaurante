@@ -106,7 +106,7 @@ include VIEWS . 'partials/header.php';
                     <select name="especialidade" class="form-control">
                         <option value="garcom">Garçom</option>
                         <option value="cozinha">Cozinha</option>
-                        <option value="cozinha">Gerencia</option>
+                        <option value="cozinha">Gerente</option>
                     </select>
                 </div>
 

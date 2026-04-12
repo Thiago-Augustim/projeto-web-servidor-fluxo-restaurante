@@ -1,11 +1,16 @@
 <?php
 
+require_once MIDDLEWARES . 'Auth.php';
+
 function funcionariosIndex(): void
 {
     if(!isset($_SESSION['logado'])){
         header("Location: " . BASE_URL . "?rota=login");
         exit();
     }
+
+    global $permissoes;
+    validarAcesso($permissoes);
 
     if (!isset($_SESSION['funcionarios'])) {
         $_SESSION['funcionarios'] = require MODELS . 'Funcionarios.php';

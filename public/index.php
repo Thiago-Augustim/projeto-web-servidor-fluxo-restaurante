@@ -1,11 +1,10 @@
 <?php
-
-
 define('ROOT', __DIR__ . '/../');
 define('VIEWS', ROOT . 'app/Views/');
 define('MODELS', ROOT . 'app/models/');
 define('BASE_URL', '/projeto-fluxo-restaurante/public/index.php');
 define('CONTROLLERS', ROOT . 'app/controllers/');
+define('MIDDLEWARES', ROOT . 'app/middlewares/');
 
 require CONTROLLERS . 'MesasController.php';
 require CONTROLLERS . 'LoginController.php';
