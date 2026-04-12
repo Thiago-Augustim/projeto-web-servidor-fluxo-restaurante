@@ -40,7 +40,7 @@ function atualizarPainel(pedido) {
                 <strong>${nome}</strong>
                 <span class="badge bg-primary rounded-pill">${quantidade}x</span>
             </div>
-            <div class="text-muted small">${preco}</div>
+            
         </div>`;
     });
 

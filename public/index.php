@@ -39,11 +39,9 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
     if($rota === 'pedidos' && $acao === 'cadastrar') {
     cadastrarPedido();
     }
-
-    
-    // if ($rota === 'pedidos' && $acao === 'alterarStatus') {
-    // alterarStatusPedido();
-    // }
+    if ($rota === 'pedidos' && $acao === 'alterarStatus') {
+    alterarStatusPedido();
+    }
 
 }
 

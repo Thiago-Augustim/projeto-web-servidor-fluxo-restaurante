@@ -53,14 +53,7 @@ $statusColors = [
                         <p class="text-muted ps-2">Nenhum pedido registrado ainda.</p>
                     <?php endif; ?>
 
-                
-
-
-
-
-                    <?php foreach ($pedidos as $pedido) : ?>
-                    
-                    
+                    <?php foreach ($pedidos as $pedido) : ?>     
 
                     <div class="card p-3 rounded-4 card-pedido"
                         data-status="<?= $pedido['status'] ?>"
@@ -150,5 +143,5 @@ $statusColors = [
         </div>
 
     </div>
-
+    <?= include VIEWS . 'components/Error.php' ?>
     <?php include VIEWS . 'partials/footer.php'; ?>
