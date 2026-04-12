@@ -18,10 +18,10 @@ function loginIndex(): void
 
 function login(): void
 {
-    $nome = $_POST['nome'] ?? '';
+    $usuario = $_POST['usuario'] ?? '';
     $senha = $_POST['senha'] ?? '';
 
-    $erros = validarLogin($nome, $senha);
+    $erros = validarLogin($usuario, $senha);
 
     if (!empty($erros)) {
         $_SESSION['erros'] = $erros;
@@ -33,7 +33,7 @@ function login(): void
 
     $funcionarioEncontrado = null;
     foreach ($funcionarios as $funcionario) {
-        if ($funcionario['nome'] === $nome && password_verify($senha, $funcionario['senha'])) {
+        if ($funcionario['usuario'] === $usuario && password_verify($senha, $funcionario['senha'])) {
             $funcionarioEncontrado = $funcionario;
             break;
         }
@@ -46,7 +46,7 @@ function login(): void
         header('Location: ' . BASE_URL . '?rota=mesas');
         exit();
     } else {
-        $_SESSION['erros'] = ['Nome ou senha inválidos.'];
+        $_SESSION['erros'] = ['usuario ou senha inválidos.'];
         header('Location: ' . BASE_URL . '?rota=login');
         exit();
     }
@@ -72,12 +72,12 @@ function logout(): void
 
 
 
-function validarLogin(string $nome, string $senha): array
+function validarLogin(string $usuario, string $senha): array
 {
     $erros = [];
 
-    if (empty($nome)) {
-        $erros[] = 'O campo nome é obrigatório.';
+    if (empty($usuario)) {
+        $erros[] = 'O campo usuario é obrigatório.';
     }
 
     if (empty($senha)) {

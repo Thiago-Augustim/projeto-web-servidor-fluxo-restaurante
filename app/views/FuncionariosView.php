@@ -100,7 +100,8 @@ include VIEWS . 'partials/header.php';
                 </div>
 
                 <div class="modal-body">
-                    <input type="text" name="nome" class="form-control mb-3" placeholder="Nome" required>
+                    <input type="text" id="nome" name="nome" class="form-control mb-3" placeholder="Nome completo" required>
+                    <input type="text" id="usuario" name="usuario" class="form-control mb-3" placeholder="Usuário" readonly>
                     <input type="password" name="senha" class="form-control mb-3" placeholder="Senha" required>
                     <select name="especialidade" class="form-control">
                         <option value="garcom">Garçom</option>

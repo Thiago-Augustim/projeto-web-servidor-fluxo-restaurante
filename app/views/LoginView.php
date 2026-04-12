@@ -21,9 +21,9 @@ include VIEWS . 'partials/Header.php';
         <form method="POST" action="<?= BASE_URL ?>?rota=login&amp;acao=entrar">
 
             <div class="mb-3">
-                <label class="form-label">Nome</label>
-                <input type="text" name="nome" class="form-control" 
-                       placeholder="Seu nome">
+                <label class="form-label">Usuário</label>
+                <input type="text" name="usuario" class="form-control" 
+                       placeholder="Seu usuario">
             </div>
 
             <div class="mb-3">

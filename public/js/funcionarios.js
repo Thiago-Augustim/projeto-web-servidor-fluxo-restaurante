@@ -7,20 +7,23 @@ document.addEventListener('click', function (e) {
         document.getElementById('painel-nome').innerText = dados.nome;
         document.getElementById('painel-id').innerHTML = "<b>" + dados.id + "</b>";
         document.getElementById('painel-especialidade').innerHTML = "<b>" + dados.especialidade + "</b>";
+        document.getElementById('input-excluir-id').value = dados.id;
     }
 });
 
-document.addEventListener('click', function (e) {
-    const card = e.target.closest('.card-funcionario');
+document.getElementById('nome').addEventListener('input', function() {
+    let nome = this.value.trim().toLowerCase();
 
-    if (card) {
-        const dados = JSON.parse(card.dataset.funcionario);
+    // remove acentos
+    nome = nome.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 
-        document.getElementById('painel-nome').innerText = dados.nome;
-        document.getElementById('painel-id').innerHTML = "<b>" + dados.id + "</b>";
-        document.getElementById('painel-especialidade').innerHTML = "<b>" + dados.especialidade + "</b>";
+    // separa palavras
+    let partes = nome.split(" ");
 
-        // 🔥 aqui o pulo do gato
-        document.getElementById('input-excluir-id').value = dados.id;
+    if (partes.length >= 2) {
+        let usuario = partes[0] + "." + partes[partes.length - 1];
+        document.getElementById('usuario').value = usuario;
+    } else {
+        document.getElementById('usuario').value = partes[0] || '';
     }
 });
