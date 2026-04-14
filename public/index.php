@@ -10,6 +10,7 @@ require CONTROLLERS . 'MesasController.php';
 require CONTROLLERS . 'LoginController.php';
 require CONTROLLERS . 'FuncionariosController.php';
 require CONTROLLERS . 'PedidosController.php';
+require CONTROLLERS . 'ComandasController.php';
 
 session_start();
 
@@ -57,5 +58,6 @@ match($rota) {
     'mesas' => mesasIndex(),
     'funcionarios' => funcionariosIndex(),
     'pedidos' => pedidosIndex(),
+    'comandas' => comandasIndex(),
     default => mesasIndex(),
 };
