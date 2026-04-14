@@ -74,40 +74,70 @@ function comandasIndex(): void
     require VIEWS . 'ComandasView.php';
 }
 
-// function fecharComanda(): void
-// {
-//     session_start();
+function fecharComanda(): void
+{
+    $mesa = $_POST['mesa'] ?? null;
 
-//     $mesa = $_POST['mesa'] ?? null;
+    if (!$mesa) {
+        header("Location: " . BASE_URL . "?rota=comandas");
+        exit;
+    }
 
-//     if (!$mesa) {
-//         header("Location: " . BASE_URL . "?rota=comandas");
-//         exit;
-//     }
+    $_SESSION['pedidos'] = $_SESSION['pedidos'] ?? [];
+    $_SESSION['comandasFechadas'] = $_SESSION['comandasFechadas'] ?? [];
+    $_SESSION['mesas'] = $_SESSION['mesas'] ?? [];
 
-//     $_SESSION['comandas'] = $_SESSION['comandas'] ?? [];
-//     $_SESSION['comandasFechadas'] = $_SESSION['comandasFechadas'] ?? [];
-//     $_SESSION['mesas'] = $_SESSION['mesas'] ?? [];
+    // salvar comanda antes de apagar (opcional, mas correto)
+    $comandaFechada = [
+        'mesa' => $mesa,
+        'itens' => [],
+        'total' => 0
+    ];
 
-//     foreach ($_SESSION['comandas'] as $key => $comanda) {
+    // percorre pedidos pra montar histórico
+    foreach ($_SESSION['pedidos'] as $pedido) {
 
-//         if ($comanda['mesa'] == $mesa) {
+        if ($pedido['numeroMesa'] != $mesa || $pedido['status'] === 'cancelado') {
+            continue;
+        }
 
-//             // move pra fechadas
-//             $_SESSION['comandasFechadas'][] = $comanda;
+        foreach ($pedido['itens'] as $item) {
 
-//             // remove das abertas
-//             unset($_SESSION['comandas'][$key]);
-//         }
-//     }
+            $nome = $item['nome'];
 
-//     //libera a mesa
-//     foreach ($_SESSION['mesas'] as &$mesaItem) {
-//         if ($mesaItem['numero'] == $mesa) {
-//             $mesaItem['status'] = 'livre';
-//         }
-//     }
+            if (!isset($comandaFechada['itens'][$nome])) {
+                $comandaFechada['itens'][$nome] = [
+                    'nome' => $nome,
+                    'quantidade' => 0,
+                    'subtotal' => 0
+                ];
+            }
 
-//     header("Location: " . BASE_URL . "?rota=comandas");
-//     exit;
-// }
+            $comandaFechada['itens'][$nome]['quantidade'] += $item['quantidade'];
+
+            if (isset($item['preco'])) {
+                $subtotal = $item['quantidade'] * $item['preco'];
+                $comandaFechada['itens'][$nome]['subtotal'] += $subtotal;
+                $comandaFechada['total'] += $subtotal;
+            }
+        }
+    }
+
+    // salva nas fechadas
+    $_SESSION['comandasFechadas'][] = $comandaFechada;
+
+    //REMOVE TODOS OS PEDIDOS DA MESA
+    $_SESSION['pedidos'] = array_filter($_SESSION['pedidos'], function ($pedido) use ($mesa) {
+        return $pedido['numeroMesa'] != $mesa;
+    });
+
+    //libera mesa
+    foreach ($_SESSION['mesas'] as &$mesaItem) {
+        if ($mesaItem['numero'] == $mesa) {
+            $mesaItem['status'] = 'livre';
+        }
+    }
+
+    header("Location: " . BASE_URL . "?rota=comandas");
+    exit;
+}

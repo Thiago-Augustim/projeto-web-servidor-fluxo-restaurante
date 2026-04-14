@@ -112,16 +112,17 @@ include VIEWS . 'partials/header.php';
             <h5>Ações</h5>
 
             <div class="d-flex flex-column gap-2">
+                <form id="form-fechar-comanda" method="POST"
+                    action="<?= BASE_URL ?>?rota=comandas&acao=fechar">
 
-                <form method="POST">
-                    <button type="submit"
-                        formaction="<?= BASE_URL ?>?rota=comandas&acao=fechar"
+                    <input type="hidden" name="mesa" id="input-mesa-fechar">
+
+                    <button type="button"
+                        id="btn-fechar-comanda"
                         class="btn btn-danger w-100">
                         Fechar Comanda
                     </button>
-
                 </form>
-
             </div>
 
         </div>

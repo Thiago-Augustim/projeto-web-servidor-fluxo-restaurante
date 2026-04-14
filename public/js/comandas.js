@@ -15,3 +15,13 @@ document.querySelectorAll('.card-comanda').forEach(card => {
         document.getElementById('input-mesa-fechar').value = mesaSelecionada;
     });
 });
+
+document.getElementById('btn-fechar-comanda').addEventListener('click', () => {
+
+    if (!mesaSelecionada) {
+        alert('Selecione uma comanda primeiro!');
+        return;
+    }
+
+    document.getElementById('form-fechar-comanda').submit();
+});
