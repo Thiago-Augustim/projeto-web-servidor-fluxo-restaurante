@@ -24,11 +24,11 @@ $statusColors = [
 
     <?php include VIEWS . 'partials/nav.php'; ?>
 
-    <div class="row gx-0 flex-grow-1 d-flex" style="overflow:hidden;">
+    <div class="row gx-0 d-flex" style="flex: 1 1 0; min-height: 0;"    >
 
         <!-- LISTA DE PEDIDOS -->
-        <div class="col-9 d-flex flex-column" style="overflow-y: auto;">
-            <div class="d-flex flex-column m-4 gap-3">
+        <div class="col-9 d-flex flex-column" style="overflow-y: auto; min-height: 0;">
+            <div class="d-flex flex-column m-4 gap-3" style="min-height: 0;">
 
                 <!-- Filtros -->
                 <div class="d-flex gap-2 flex-wrap p-3 bg-cinzaClaro rounded-4">
@@ -97,7 +97,7 @@ $statusColors = [
         </div>
 
         <!-- PAINEL DIREITO FIXO -->
-        <div class="col-3 d-flex flex-column" style="overflow-y:auto; border-left: 1px solid #ccc;">
+        <div class="col-3 d-flex flex-column" style="overflow-y:auto; border-left: 1px solid #ccc;min-height: 0;">
             <div class="d-flex flex-column m-3 gap-3">
 
                 <!-- Título do pedido -->
