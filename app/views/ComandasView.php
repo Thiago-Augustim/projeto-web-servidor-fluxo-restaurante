@@ -100,35 +100,34 @@ include VIEWS . 'partials/header.php';
         </div>
     </div>
 
-    
 
-    <!-- PAINEL LATERAL -->
-    <div class="col-3 flex-grow-1">
+<!-- PAINEL LATERAL -->
+<div class="col-3 flex-grow-1">
 
-        <div class="d-flex flex-column mt-3">
-            <!-- AÇÕES -->
-            <div class="p-3 bg-cinzaClaro rounded-4 me-4 ms-4 flex-grow-1">
+    <div class="d-flex flex-column mt-3">
 
-                <h5>Ações</h5>
+        <!-- AÇÕES -->
+        <div class="p-3 bg-cinzaClaro rounded-4 me-4 ms-4 flex-grow-1">
 
-                <div class="d-flex flex-column gap-2">
+            <h5>Ações</h5>
 
-                    <button id="btn-fechar-comanda"
-                        class="btn btn-danger">
+            <div class="d-flex flex-column gap-2">
+
+                <form method="POST">
+                    <button type="submit"
+                        formaction="<?= BASE_URL ?>?rota=comandas&acao=fechar"
+                        class="btn btn-danger w-100">
                         Fechar Comanda
                     </button>
-                </div>
+
+                </form>
 
             </div>
 
         </div>
+
     </div>
-
 </div>
-
-
-
-
 
 <?php
 include VIEWS . 'components/Error.php';
