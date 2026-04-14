@@ -68,5 +68,7 @@ function comandasIndex(): void
     // ordena por número da mesa
     ksort($comandas);
 
+    $comandasFechadas = $_SESSION['comandasFechadas'] ?? [];
+
     require VIEWS . 'ComandasView.php';
 }
