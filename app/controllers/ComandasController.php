@@ -70,5 +70,43 @@ function comandasIndex(): void
 
     $comandasFechadas = $_SESSION['comandasFechadas'] ?? [];
 
+function fecharComanda(): void
+{
+    session_start();
+
+    $mesa = $_POST['mesa'] ?? null;
+
+    if (!$mesa) {
+        header("Location: " . BASE_URL . "?rota=comandas");
+        exit;
+    }
+
+    $_SESSION['comandas'] = $_SESSION['comandas'] ?? [];
+    $_SESSION['comandas_fechadas'] = $_SESSION['comandas_fechadas'] ?? [];
+    $_SESSION['mesas'] = $_SESSION['mesas'] ?? [];
+
+    foreach ($_SESSION['comandas'] as $key => $comanda) {
+
+        if ($comanda['mesa'] == $mesa) {
+
+            // move pra fechadas
+            $_SESSION['comandas_fechadas'][] = $comanda;
+
+            // remove das abertas
+            unset($_SESSION['comandas'][$key]);
+        }
+    }
+
+    // 🔥 libera a mesa
+    foreach ($_SESSION['mesas'] as &$mesaItem) {
+        if ($mesaItem['numero'] == $mesa) {
+            $mesaItem['status'] = 'livre';
+        }
+    }
+
+    header("Location: " . BASE_URL . "?rota=comandas");
+    exit;
+}
+
     require VIEWS . 'ComandasView.php';
 }
