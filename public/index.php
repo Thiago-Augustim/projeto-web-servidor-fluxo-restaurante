@@ -42,7 +42,9 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($rota === 'pedidos' && $acao === 'alterarStatus') {
     alterarStatusPedido();
     }
-
+    if ($rota === 'comandas' && $acao === 'fechar') {
+        fecharComanda();
+    }
 }
 
 if($_SERVER['REQUEST_METHOD'] === 'GET') {

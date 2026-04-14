@@ -67,8 +67,40 @@ include VIEWS . 'partials/header.php';
 
                 </div>
             </div>
+            <!-- COMANDAS FECHADAS -->
+            <div class="p-3 rounded bg-cinzaClaro me-4 ms-4 mt-3 rounded-4">
+
+                <h5 class="mb-3">Comandas Fechadas</h5>
+
+                <div class="row g-4">
+
+                    <?php if (empty($comandasFechadas)): ?>
+                        <p class="text-muted">Nenhuma comanda fechada.</p>
+                    <?php endif; ?>
+
+                    <?php foreach ($comandasFechadas as $comanda): ?>
+                        <div class="col-6 col-sm-4 col-md-3 col-lg-3">
+
+                            <div class="card p-3 rounded-4 h-100 bg-light">
+
+                                <strong>Mesa <?= $comanda['mesa'] ?></strong>
+
+                                <small class="text-muted">
+                                    Total: R$ <?= number_format($comanda['total'], 2, ',', '.') ?>
+                                </small>
+
+                            </div>
+
+                        </div>
+                    <?php endforeach; ?>
+
+                </div>
+
+            </div>
         </div>
     </div>
+
+    
 
     <!-- PAINEL LATERAL -->
     <div class="col-3 flex-grow-1">
@@ -93,6 +125,10 @@ include VIEWS . 'partials/header.php';
     </div>
 
 </div>
+
+
+
+
 
 <?php
 include VIEWS . 'components/Error.php';
