@@ -99,12 +99,26 @@ function alterarStatusMesa()
     $status = $_POST['status'] ?? null;
 
 
+    $pedidoPendente = false;
+    if (isset($_SESSION['pedidos'])) {
+        foreach ($_SESSION['pedidos'] as $pedido) {
+            if ($pedido['numeroMesa'] == $numeroMesa && $pedido['status'] !== 'cancelado') {
+                $pedidoPendente = true;
+                break;
+            }
+        }
+    }
 
     if (!$numeroMesa || !$status) {
         $_SESSION['erros'] = ["Selecione uma mesa para alterar o status."];
         header('Location: ' . BASE_URL . '?rota=mesas');
         exit();
+    }if($pedidoPendente) {
+        $_SESSION['erros'] = ["Esta mesa possui um pedido e comanda aberto, seu status não pode ser alterado"];
+        header('Location: ' . BASE_URL . '?rota=mesas');
+        exit();
     }
+
 
     foreach ($_SESSION['mesas'] as &$mesa) {
         if ($mesa['numero'] == $numeroMesa) {

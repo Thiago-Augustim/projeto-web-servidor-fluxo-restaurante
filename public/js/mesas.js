@@ -7,10 +7,14 @@ let mesaSelecionada =
 document.getElementById('listaMesas').addEventListener('click', function (e) {
     const card = e.target.closest('.card-mesa');
     if (!card) return;
+    
+    document.querySelectorAll('.card-mesa').forEach(c => c.style.outline = 'none');
+    card.style.outline = '2px solid var(--buttonsColor)';
 
     const mesa = JSON.parse(card.dataset.mesa);
     console.log('Mesa selecionada:', mesa);
     selecionarMesa(mesa);
+
 });
 
 
