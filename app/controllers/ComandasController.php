@@ -24,7 +24,7 @@ function comandasIndex(): void
 
         $mesa = $pedido['numeroMesa'];
 
-        //ignora pedidos cancelados (opcional)
+        //ignora pedidos cancelados
         if ($pedido['status'] === 'cancelado') {
             continue;
         }
@@ -34,7 +34,7 @@ function comandasIndex(): void
             $comandas[$mesa] = [
                 'mesa' => $mesa,
                 'itens' => [],
-                'total' => 0 // opcional (se tiver preço)
+                'total' => 0 
             ];
         }
 
@@ -48,7 +48,7 @@ function comandasIndex(): void
                 $comandas[$mesa]['itens'][$nome] = [
                     'nome' => $nome,
                     'quantidade' => 0,
-                    'subtotal' => 0 // opcional
+                    'subtotal' => 0 
                 ];
             }
 

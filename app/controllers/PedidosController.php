@@ -66,7 +66,7 @@ function alterarStatusPedido(): void
 
             //Se o pedido estiver cancelado ou concluido, nao pode ser alterado
             if ($pedido['status'] == 'cancelado' || $pedido['status'] == 'concluido') {
-                $_SESSION['erros'] = ['O pedito está ' . $pedido['status'] . '. Não pode ser alterado'];
+                $_SESSION['erros'] = ['O pedido está ' . $pedido['status'] . '. Não pode ser alterado'];
                 header('Location: ' . BASE_URL . '?rota=pedidos');
                 exit();
             }
