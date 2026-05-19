@@ -79,11 +79,12 @@ $statusColors = [
                                 <?php endforeach; ?>
                             </div>
 
-                            <div>
+                            <div class="text-end">
                                 <span class="badge rounded-pill px-3 py-2"
                                     style="background-color: <?= $statusColors[$pedido['status']] ?>; font-size: 0.85rem;">
                                     <?= $statusLabels[$pedido['status']] ?>
                                 </span>
+                                <div><small class="text-muted"><?= $pedido['tempo'] ?></small></div>
                             </div>
 
                         </div>

@@ -4,16 +4,10 @@ require_once MIDDLEWARES . 'Auth.php';
 
 function pedidosIndex(): void
 {
-
-    if (!isset($_SESSION['pedidos'])) {
-        $_SESSION['pedidos'] = require MODELS . 'Pedidos.php';
-    }
-
     global $permissoes;
     validarAcesso($permissoes);
 
-
-    $pedidos = $_SESSION['pedidos'];
+    $pedidos = Pedidos::todos();
 
     require VIEWS . 'PedidosView.php';
 }
@@ -21,8 +15,7 @@ function pedidosIndex(): void
 function cadastrarPedido(): void
 {
     $numeroMesa = $_POST['numeroMesa'] ?? null;
-    $itens = $_POST['itens']    ?? null;
-
+    $itens = $_POST['itens'] ?? null;
 
     if (!$numeroMesa || !$itens) {
         $_SESSION['erros'] = ['O pedido Não pode ser Vazio'];
@@ -30,17 +23,7 @@ function cadastrarPedido(): void
         exit();
     }
 
-    if (!isset($_SESSION['pedidos'])) {
-        $_SESSION['pedidos'] = [];
-    }
-
-    $_SESSION['pedidos'][] = [
-        'id' => count($_SESSION['pedidos']) + 1,
-        'numeroMesa' => $numeroMesa,
-        'status' => "aguardando",
-        'itens' => $itens
-    ];
-
+    Pedidos::cadastrar($numeroMesa, $itens);
 
     header('Location: ' . BASE_URL . '?rota=mesas');
     exit();
@@ -59,22 +42,7 @@ function alterarStatusPedido(): void
         exit();
     }
 
-
-
-    foreach ($_SESSION['pedidos'] as &$pedido) {
-        if ($pedido['id'] == $id) {
-
-            //Se o pedido estiver cancelado ou concluido, nao pode ser alterado
-            if ($pedido['status'] == 'cancelado' || $pedido['status'] == 'concluido') {
-                $_SESSION['erros'] = ['O pedido está ' . $pedido['status'] . '. Não pode ser alterado'];
-                header('Location: ' . BASE_URL . '?rota=pedidos');
-                exit();
-            }
-
-            $pedido['status'] = $status;
-            break;
-        }
-    }
+    Pedidos::alterarStatus($id, $status);
 
     header('Location: ' . BASE_URL . '?rota=pedidos');
     exit();

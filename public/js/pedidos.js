@@ -12,7 +12,7 @@ document.getElementById('listaPedidos').addEventListener('click', function (e) {
 
 function atualizarPainel(pedido) {
     document.getElementById('painel-titulo').innerHTML = 'PEDIDO<br>#' + pedido.id;
-    document.getElementById('painel-mesa').textContent  = (pedido.numeroMesa).padStart(2, '0');
+    document.getElementById('painel-mesa').textContent = String(pedido.numeroMesa).padStart(2, '0');
     document.getElementById('input-pedido-id').value    = pedido.id;
 
     const container = document.getElementById('painel-itens');

@@ -6,6 +6,9 @@ define('BASE_URL', '/projeto-fluxo-restaurante/public/index.php');
 define('CONTROLLERS', ROOT . 'app/controllers/');
 define('MIDDLEWARES', ROOT . 'app/middlewares/');
 
+require ROOT . 'vendor/autoload.php';
+require MODELS . 'Database.php';
+
 require CONTROLLERS . 'MesasController.php';
 require CONTROLLERS . 'LoginController.php';
 require CONTROLLERS . 'FuncionariosController.php';
@@ -37,10 +40,10 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
         login();
     }
     if($rota === 'pedidos' && $acao === 'cadastrar') {
-    cadastrarPedido();
+        cadastrarPedido();
     }
     if ($rota === 'pedidos' && $acao === 'alterarStatus') {
-    alterarStatusPedido();
+        alterarStatusPedido();
     }
     if ($rota === 'comandas' && $acao === 'fechar') {
         fecharComanda();
@@ -48,11 +51,9 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 if($_SERVER['REQUEST_METHOD'] === 'GET') {
-
     if ($rota === 'logout') {
         logout();
     }
-
 }
 
 match($rota) {

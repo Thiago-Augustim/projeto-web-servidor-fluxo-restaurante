@@ -1,0 +1,17 @@
+{
+    "name": "kayo/projeto-fluxo-restaurante",
+    "authors": [
+        {
+            "name": "KayoGustavo",
+            "email": "154030421+KayoGustavo@users.noreply.github.com"
+        }
+    ],
+    "autoload": {
+        "classmap": [
+            "./app"
+        ]
+    },
+    "require": {
+        "nesbot/carbon": "^3.11"
+    }
+}
