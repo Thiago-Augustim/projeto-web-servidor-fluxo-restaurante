@@ -2,7 +2,7 @@
 define('ROOT', __DIR__ . '/../');
 define('VIEWS', ROOT . 'app/Views/');
 define('MODELS', ROOT . 'app/models/');
-define('BASE_URL', '/projeto-fluxo-restaurante/public/index.php');
+define('BASE_URL', 'http://projeto-fluxo-restaurante.test/');
 define('CONTROLLERS', ROOT . 'app/controllers/');
 define('MIDDLEWARES', ROOT . 'app/middlewares/');
 
