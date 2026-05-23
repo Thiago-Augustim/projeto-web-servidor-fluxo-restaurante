@@ -132,5 +132,6 @@ include VIEWS . 'partials/header.php';
 
 <?php
 include VIEWS . 'components/Error.php';
+include VIEWS . 'components/Success.php';
 include VIEWS . 'partials/footer.php';
 ?>

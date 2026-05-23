@@ -43,5 +43,7 @@ include VIEWS . 'partials/Header.php';
 
 
 <?php
+require VIEWS . 'components/Error.php';
+require VIEWS . 'components/Success.php';
 require VIEWS . 'partials/Footer.php';
 ?>

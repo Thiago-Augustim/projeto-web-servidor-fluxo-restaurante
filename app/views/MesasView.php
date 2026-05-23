@@ -34,20 +34,27 @@ include VIEWS . 'partials/header.php';
                 <div class="p-3 rounded bg-cinzaClaro me-4 ms-4 flex-grow-1 rounded-4">
                     <div class="row g-4" id="listaMesas">
 
-
-
-                        <!-- Faz um foreach em um array de mesas e preenche na tela -->
-                        <?php foreach ($mesas as $mesa): ?>
-                            <div class="col-6 col-sm-4 col-md-3 col-lg-3">
-                                <div class="card text-center p-3 rounded card-mesa"
-                                    style="background-color: var(--mesa<?= ucfirst($mesa['status']) ?>Color);"
-                                    data-mesa='<?= htmlspecialchars(json_encode($mesa), ENT_QUOTES) ?>'>
-
-                                    <strong>Mesa <?= $mesa['numero'] ?></strong>
-                                    <span>Cadeiras: <?= $mesa['cadeiras'] ?></span>
+                        <?php if (empty($mesas)): ?>
+                            <div class="col-12 d-flex justify-content-center align-items-center" style="min-height: 300px;">
+                                <div class="text-center">
+                                    <h4 style="color: #999;">Não há mesas cadastradas</h4>
+                                    <p style="color: #bbb;">Crie uma nova mesa para começar</p>
                                 </div>
                             </div>
-                        <?php endforeach; ?>
+                        <?php else: ?>
+                            <!-- Faz um foreach em um array de mesas e preenche na tela -->
+                            <?php foreach ($mesas as $mesa): ?>
+                                <div class="col-6 col-sm-4 col-md-3 col-lg-3">
+                                    <div class="card text-center p-3 rounded card-mesa"
+                                        style="background-color: var(--mesa<?= ucfirst($mesa['status']) ?>Color);"
+                                        data-mesa='<?= htmlspecialchars(json_encode($mesa), ENT_QUOTES) ?>'>
+
+                                        <strong>Mesa <?= $mesa['numero'] ?></strong>
+                                        <span>Cadeiras: <?= $mesa['cadeiras'] ?></span>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
 
                     </div>
                 </div>
@@ -160,6 +167,7 @@ include VIEWS . 'partials/header.php';
 
     <?php
     include VIEWS . 'components/Error.php';
+    include VIEWS . 'components/Success.php';
     include VIEWS . 'components/ModalCardapio.php';
     include VIEWS . 'partials/Footer.php';
     ?>

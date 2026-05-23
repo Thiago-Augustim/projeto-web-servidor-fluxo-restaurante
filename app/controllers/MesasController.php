@@ -1,5 +1,6 @@
 <?php
 require_once MIDDLEWARES . 'Auth.php';
+require_once MODELS . 'MesaModel.php';
 
 function mesasIndex(): void
 {
@@ -11,26 +12,19 @@ function mesasIndex(): void
     global $permissoes;
     validarAcesso($permissoes);
 
-    //Se não haver uma sessão de mesas, ele carrega as mesas do arquivo e salva na sessão
-    if (!isset($_SESSION['mesas'])) {
-        $_SESSION['mesas'] = require MODELS . 'Mesas.php';
-    }
-
-    $mesas = $_SESSION['mesas'];
+    $mesaModel = new MesaModel();
+    $mesas = $mesaModel->listar();
 
     require VIEWS . 'MesasView.php';
 }
 
 
+
 function cadastrarMesa(): void
 {
-    $mesas = require MODELS . 'Mesas.php';
-
     $numero = $_POST['numero'] ?? null;
     $cadeiras = $_POST['cadeiras'] ?? null;
     $status = $_POST['status'] ?? null;
-
-    $mesasSessao = $_SESSION['mesas'] ?? [];
 
     $erros = validarMesa($_POST);
 
@@ -40,17 +34,13 @@ function cadastrarMesa(): void
         exit();
     }
 
-    $mesasSessao[] = [
-        'id' => count($mesas) + count($mesasSessao) + 1,
-        'numero' => $numero,
-        'cadeiras' => $cadeiras,
-        'status' => $status
-    ];
-    $_SESSION['mesas'] = $mesasSessao;
-
-    usort($_SESSION['mesas'], function($a, $b) {
-        return $a['numero'] <=> $b['numero'];
-    });
+    try {
+        $mesaModel = new MesaModel();
+        $mesaModel->inserir($numero, $cadeiras, $status);
+        $_SESSION['sucesso'] = "Mesa cadastrada com sucesso!";
+    } catch (Exception $e) {
+        $_SESSION['erros'] = [$e->getMessage()];
+    }
 
     header('Location: ' . BASE_URL . '?rota=mesas');
     exit();
@@ -59,23 +49,15 @@ function cadastrarMesa(): void
 function validarMesa($mesa): array
 {
     $erros = [];
+    $mesaModel = new MesaModel();
 
-    // verifica null/vazio 
     if (empty($mesa['numero'])) {
         $erros[] = "Número da mesa é obrigatório.";
     } elseif (!is_numeric($mesa['numero']) || $mesa['numero'] < 1) {
         $erros[] = "Número da mesa inválido.";
     } else {
-
-        //verifica duplicidade do numero da mesa
-        //$mesas = require MODELS . 'Mesas.php';
-        $mesasSessao = $_SESSION['mesas'] ?? [];
-
-        foreach ($mesasSessao as $m) {
-            if ($m['numero'] == $mesa['numero']) {
-                $erros[] = "Número da mesa já existe.";
-                break;
-            }
+        if ($mesaModel->verificarNumeroExistente($mesa['numero'])) {
+            $erros[] = "Número da mesa já existe.";
         }
     }
 
@@ -94,10 +76,14 @@ function validarMesa($mesa): array
 
 function alterarStatusMesa()
 {
-
     $numeroMesa = $_POST['numeroMesa'] ?? null;
     $status = $_POST['status'] ?? null;
 
+    if (!$numeroMesa || !$status) {
+        $_SESSION['erros'] = ["Selecione uma mesa para alterar o status."];
+        header('Location: ' . BASE_URL . '?rota=mesas');
+        exit();
+    }
 
     $pedidoPendente = false;
     if (isset($_SESSION['pedidos'])) {
@@ -109,23 +95,18 @@ function alterarStatusMesa()
         }
     }
 
-    if (!$numeroMesa || !$status) {
-        $_SESSION['erros'] = ["Selecione uma mesa para alterar o status."];
-        header('Location: ' . BASE_URL . '?rota=mesas');
-        exit();
-    }if($pedidoPendente) {
+    if ($pedidoPendente) {
         $_SESSION['erros'] = ["Esta mesa possui um pedido e comanda aberto, seu status não pode ser alterado"];
         header('Location: ' . BASE_URL . '?rota=mesas');
         exit();
     }
 
-
-    foreach ($_SESSION['mesas'] as &$mesa) {
-        if ($mesa['numero'] == $numeroMesa) {
-            $mesa['status'] = $status;
-            $_SESSION['sucesso'] = "Status da mesa alterado para " . ucfirst($status) . ".";
-            break;
-        }
+    try {
+        $mesaModel = new MesaModel();
+        $mesaModel->atualizarStatus($numeroMesa, $status);
+        $_SESSION['sucesso'] = "Status da mesa alterado para " . ucfirst($status) . ".";
+    } catch (Exception $e) {
+        $_SESSION['erros'] = [$e->getMessage()];
     }
 
     header('Location: ' . BASE_URL . '?rota=mesas');
@@ -134,26 +115,34 @@ function alterarStatusMesa()
 
 function excluirMesa(): void
 {
-    $numeroMesa = $_POST['numeroMesa'];
+    $numeroMesa = $_POST['numeroMesa'] ?? null;
 
-    if ($numeroMesa === "") {
-        $_SESSION['erros'][] = "Selecione uma mesa antes de exluir";
+    if (empty($numeroMesa)) {
+        $_SESSION['erros'] = ["Selecione uma mesa antes de excluir"];
+        header('Location: ' . BASE_URL . '?rota=mesas');
+        exit();
     }
 
-    // Usamos $index => $mesa para pegar a posição exata no array
-    foreach ($_SESSION['mesas'] as $index => $mesa) {
-        if ($mesa['numero'] == $numeroMesa) {
+    try {
+        $mesaModel = new MesaModel();
+        $mesa = $mesaModel->buscarPorNumero($numeroMesa);
 
-            if ($mesa['status'] === 'livre') {
-                unset($_SESSION['mesas'][$index]);
-                break;
-            } else {
-                $_SESSION['erros'][] = "A mesa deve estar livre para ser Excluida";
-                break;
-            }
-
-            //$_SESSION['mesas'] = array_values($_SESSION['mesas']);
+        if (!$mesa) {
+            $_SESSION['erros'] = ["Mesa não encontrada"];
+            header('Location: ' . BASE_URL . '?rota=mesas');
+            exit();
         }
+
+        if ($mesa['status'] !== 'livre') {
+            $_SESSION['erros'] = ["A mesa deve estar livre para ser excluída"];
+            header('Location: ' . BASE_URL . '?rota=mesas');
+            exit();
+        }
+
+        $mesaModel->deletar($mesa['id']);
+        $_SESSION['sucesso'] = "Mesa excluída com sucesso!";
+    } catch (Exception $e) {
+        $_SESSION['erros'] = [$e->getMessage()];
     }
 
     header('Location: ' . BASE_URL . '?rota=mesas');

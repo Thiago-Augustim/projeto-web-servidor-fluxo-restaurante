@@ -9,3 +9,10 @@ CREATE TABLE IF NOT EXISTS pedidos (
     itens JSON NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE TABLE mesas (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    numero INT UNIQUE,
+    cadeiras INT,
+    status VARCHAR(20)
+)

@@ -119,4 +119,5 @@ include VIEWS . 'partials/header.php';
     </div>
 </div>
 <?php include VIEWS . 'components/Error.php'; ?>
+<?php include VIEWS . 'components/Success.php'; ?>
 <?php include VIEWS . 'partials/footer.php'; ?>
