@@ -1,7 +1,5 @@
 <?php
 
-use Carbon\Carbon;
-
 class MesaModel {
     private $db;
 
@@ -25,6 +23,17 @@ class MesaModel {
             $sql = "SELECT * FROM mesas WHERE numero = ?";
             $stmt = $this->db->prepare($sql);
             $stmt->execute([$numero]);
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            return null;
+        }
+    }
+
+    public function buscarPorId($id) {
+        try {
+            $sql = "SELECT * FROM mesas WHERE id = ?";
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute([$id]);
             return $stmt->fetch(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
             return null;
@@ -68,17 +77,6 @@ class MesaModel {
             return $stmt->execute([$id]);
         } catch (PDOException $e) {
             throw new Exception("Erro ao deletar mesa: " . $e->getMessage());
-        }
-    }
-
-    public function buscarPorId($id) {
-        try {
-            $sql = "SELECT * FROM mesas WHERE id = ?";
-            $stmt = $this->db->prepare($sql);
-            $stmt->execute([$id]);
-            return $stmt->fetch(PDO::FETCH_ASSOC);
-        } catch (PDOException $e) {
-            return null;
         }
     }
 

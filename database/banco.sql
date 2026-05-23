@@ -1,18 +1,165 @@
-CREATE DATABASE IF NOT EXISTS fluxo_restaurante;
+-- ARQUIVO GERADO DIRETAMENTE PELO phpMyAdmin
 
-USE fluxo_restaurante;
+-- phpMyAdmin SQL Dump
+-- version 5.2.1
+-- https://www.phpmyadmin.net/
+--
+-- Host: 127.0.0.1:3307
+-- Tempo de geração: 23/05/2026 às 04:47
+-- Versão do servidor: 10.4.32-MariaDB
+-- Versão do PHP: 8.2.12
 
-CREATE TABLE IF NOT EXISTS pedidos (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    numeroMesa INT NOT NULL,
-    status VARCHAR(20) NOT NULL DEFAULT 'aguardando',
-    itens JSON NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
 
-CREATE TABLE mesas (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    numero INT UNIQUE,
-    cadeiras INT,
-    status VARCHAR(20)
-)
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Banco de dados: `fluxo_restaurante`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura para tabela `comandas`
+--
+
+CREATE TABLE `comandas` (
+  `id` int(11) NOT NULL,
+  `mesa` int(11) NOT NULL,
+  `itens` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`itens`)),
+  `total` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura para tabela `comandas_fechadas`
+--
+
+CREATE TABLE `comandas_fechadas` (
+  `id` int(11) NOT NULL,
+  `mesa` int(11) NOT NULL,
+  `itens` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`itens`)),
+  `total` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura para tabela `mesas`
+--
+
+CREATE TABLE `mesas` (
+  `id` int(11) NOT NULL,
+  `numero` int(11) DEFAULT NULL,
+  `cadeiras` int(11) DEFAULT NULL,
+  `status` varchar(20) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura para tabela `pedidos`
+--
+
+CREATE TABLE `pedidos` (
+  `id` int(11) NOT NULL,
+  `numeroMesa` int(11) NOT NULL,
+  `status` varchar(20) NOT NULL DEFAULT 'aguardando',
+  `itens` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`itens`)),
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Índices para tabelas despejadas
+--
+
+--
+-- Índices de tabela `comandas`
+--
+ALTER TABLE `comandas`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `mesa` (`mesa`),
+  ADD KEY `idx_mesa` (`mesa`),
+  ADD KEY `idx_created_at` (`created_at`),
+  ADD KEY `idx_mesa_created` (`mesa`,`created_at`);
+
+--
+-- Índices de tabela `comandas_fechadas`
+--
+ALTER TABLE `comandas_fechadas`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_mesa` (`mesa`),
+  ADD KEY `idx_created_at` (`created_at`),
+  ADD KEY `idx_mesa_created` (`mesa`,`created_at`);
+
+--
+-- Índices de tabela `mesas`
+--
+ALTER TABLE `mesas`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `numero` (`numero`);
+
+--
+-- Índices de tabela `pedidos`
+--
+ALTER TABLE `pedidos`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- AUTO_INCREMENT para tabelas despejadas
+--
+
+--
+-- AUTO_INCREMENT de tabela `comandas`
+--
+ALTER TABLE `comandas`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de tabela `comandas_fechadas`
+--
+ALTER TABLE `comandas_fechadas`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de tabela `mesas`
+--
+ALTER TABLE `mesas`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de tabela `pedidos`
+--
+ALTER TABLE `pedidos`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- Restrições para tabelas despejadas
+--
+
+--
+-- Restrições para tabelas `comandas`
+--
+ALTER TABLE `comandas`
+  ADD CONSTRAINT `comandas_ibfk_1` FOREIGN KEY (`mesa`) REFERENCES `mesas` (`numero`) ON DELETE CASCADE;
+
+--
+-- Restrições para tabelas `comandas_fechadas`
+--
+ALTER TABLE `comandas_fechadas`
+  ADD CONSTRAINT `comandas_fechadas_ibfk_1` FOREIGN KEY (`mesa`) REFERENCES `mesas` (`numero`) ON DELETE CASCADE;
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

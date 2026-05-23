@@ -1,5 +1,7 @@
 <?php
 require_once MIDDLEWARES . 'Auth.php';
+require_once MODELS . 'ComandaModel.php';
+require_once MODELS . 'MesaModel.php';
 
 function comandasIndex(): void
 {
@@ -11,65 +13,51 @@ function comandasIndex(): void
     global $permissoes;
     validarAcesso($permissoes);
 
-    // Se não existir pedidos na sessão, inicializa vazio
-    if (!isset($_SESSION['pedidos'])) {
-        $_SESSION['pedidos'] = [];
-    }
-
-    $pedidos = $_SESSION['pedidos'];
-
+    $comandaModel = new ComandaModel();
+    $pedidos = Pedidos::todos();
     $comandas = [];
 
+    // Calcula comandas ativas a partir dos pedidos (sem pedidos cancelados)
     foreach ($pedidos as $pedido) {
-
         $mesa = $pedido['numeroMesa'];
 
-        //ignora pedidos cancelados
+        // Ignora pedidos cancelados
         if ($pedido['status'] === 'cancelado') {
             continue;
         }
 
-        // cria a comanda da mesa se não existir
         if (!isset($comandas[$mesa])) {
             $comandas[$mesa] = [
                 'mesa' => $mesa,
                 'itens' => [],
-                'total' => 0 
+                'total' => 0
             ];
         }
 
-        // percorre itens do pedido
         foreach ($pedido['itens'] as $item) {
-
             $nome = $item['nome'];
 
-            // se item ainda não existe na comanda
             if (!isset($comandas[$mesa]['itens'][$nome])) {
                 $comandas[$mesa]['itens'][$nome] = [
                     'nome' => $nome,
                     'quantidade' => 0,
-                    'subtotal' => 0 
+                    'subtotal' => 0
                 ];
             }
 
-            // soma quantidade
             $comandas[$mesa]['itens'][$nome]['quantidade'] += $item['quantidade'];
 
-            //se tiver preço no item
             if (isset($item['preco'])) {
                 $subtotal = $item['quantidade'] * $item['preco'];
-
                 $comandas[$mesa]['itens'][$nome]['subtotal'] += $subtotal;
                 $comandas[$mesa]['total'] += $subtotal;
             }
         }
     }
 
-    // ordena por número da mesa
     ksort($comandas);
 
-    $comandasFechadas = $_SESSION['comandasFechadas'] ?? [];
-
+    $comandasFechadas = $comandaModel->listarFechadas();
 
     require VIEWS . 'ComandasView.php';
 }
@@ -84,68 +72,48 @@ function fecharComanda(): void
         exit();
     }
 
-    $_SESSION['pedidos'] = $_SESSION['pedidos'] ?? [];
-    //$_SESSION['comandasFechadas'] = $_SESSION['comandasFechadas'] ?? [];
-    $_SESSION['mesas'] = $_SESSION['mesas'] ?? [];
+    try {
+        $comandaModel = new ComandaModel();
+        $mesaModel = new MesaModel();
 
-    // salvar comanda antes de apagar 
-    $comandaFechada = [
-        'mesa' => $mesa,
-        'itens' => [],
-        'total' => 0
-    ];
+        // Busca todos os pedidos da mesa
+        $pedidos = Pedidos::buscarPorMesa($mesa);
 
-    // percorre pedidos pra montar histórico
-    foreach ($_SESSION['pedidos'] as $pedido) {
-
-        if ($pedido['numeroMesa'] != $mesa || $pedido['status'] === 'cancelado') {
-            continue;
+        // Valida se todos os pedidos (não cancelados) estão concluídos
+        $temPendente = false;
+        foreach ($pedidos as $pedido) {
+            if ($pedido['status'] !== 'concluido' && $pedido['status'] !== 'cancelado') {
+                $temPendente = true;
+                break;
+            }
         }
 
-        //Verifica se todos os pedidos das comandas foram concluidos
-        if ($pedido['status'] != 'concluido' && $pedido['status'] != 'cancelado') {
-            $_SESSION['erros'] = ['Há pedidos que não foram concluidos na mesa ' . $pedido['numeroMesa'] . '. Todos deves estar concluidos para fechar a comanda!'];
-            header("Location: " . BASE_URL . "?rota=comandas"); 
+        if ($temPendente) {
+            $_SESSION['erros'] = ['Há pedidos que não foram concluídos. Todos devem estar concluídos para fechar a comanda!'];
+            header("Location: " . BASE_URL . "?rota=comandas");
             exit();
         }
 
+        // Gera comanda fechada (sem pedidos cancelados)
+        $comandaFechada = $comandaModel->gerarComandaFechada($mesa);
 
+        // Salva comanda fechada
+        $comandaModel->salvarFechada($mesa, $comandaFechada['itens'], $comandaFechada['total']);
 
-        foreach ($pedido['itens'] as $item) {
+        // Deleta comanda aberta
+        $comandaModel->deletarPorMesa($mesa);
 
-            $nome = $item['nome'];
-
-            if (!isset($comandaFechada['itens'][$nome])) {
-                $comandaFechada['itens'][$nome] = [
-                    'nome' => $nome,
-                    'quantidade' => 0,
-                    'subtotal' => 0
-                ];
-            }
-
-            $comandaFechada['itens'][$nome]['quantidade'] += $item['quantidade'];
-
-            if (isset($item['preco'])) {
-                $subtotal = $item['quantidade'] * $item['preco'];
-                $comandaFechada['itens'][$nome]['subtotal'] += $subtotal;
-                $comandaFechada['total'] += $subtotal;
-            }
+        // Deleta pedidos da mesa
+        foreach ($pedidos as $pedido) {
+            Pedidos::deletar($pedido['id']);
         }
-    }
 
-    // salva nas fechadas
-    $_SESSION['comandasFechadas'][] = $comandaFechada;
+        // Libera mesa
+        $mesaModel->atualizarStatus($mesa, 'livre');
 
-    //REMOVE TODOS OS PEDIDOS DA MESA
-    $_SESSION['pedidos'] = array_filter($_SESSION['pedidos'], function ($pedido) use ($mesa) {
-        return $pedido['numeroMesa'] != $mesa;
-    });
-
-    //libera mesa
-    foreach ($_SESSION['mesas'] as &$mesaItem) {
-        if ($mesaItem['numero'] == $mesa) {
-            $mesaItem['status'] = 'livre';
-        }
+        $_SESSION['sucesso'] = "Comanda fechada com sucesso!";
+    } catch (Exception $e) {
+        $_SESSION['erros'] = [$e->getMessage()];
     }
 
     header("Location: " . BASE_URL . "?rota=comandas");

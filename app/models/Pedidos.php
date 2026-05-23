@@ -35,4 +35,23 @@ class Pedidos {
             ':id'     => $id
         ]);
     }
+
+    public static function deletar($id) {
+        $db = Database::getConexao();
+        $stmt = $db->prepare('DELETE FROM pedidos WHERE id = ?');
+        $stmt->execute([$id]);
+    }
+
+    public static function buscarPorMesa($mesa) {
+        $db = Database::getConexao();
+        $stmt = $db->prepare('SELECT * FROM pedidos WHERE numeroMesa = ? ORDER BY created_at DESC');
+        $stmt->execute([$mesa]);
+        $pedidos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        foreach ($pedidos as &$pedido) {
+            $pedido['itens'] = json_decode($pedido['itens'], true);
+        }
+
+        return $pedidos;
+    }
 }

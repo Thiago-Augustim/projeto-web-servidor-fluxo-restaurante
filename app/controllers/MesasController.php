@@ -1,6 +1,7 @@
 <?php
 require_once MIDDLEWARES . 'Auth.php';
 require_once MODELS . 'MesaModel.php';
+require_once MODELS . 'ComandaModel.php';
 
 function mesasIndex(): void
 {
@@ -17,8 +18,6 @@ function mesasIndex(): void
 
     require VIEWS . 'MesasView.php';
 }
-
-
 
 function cadastrarMesa(): void
 {
@@ -85,23 +84,34 @@ function alterarStatusMesa()
         exit();
     }
 
-    $pedidoPendente = false;
-    if (isset($_SESSION['pedidos'])) {
-        foreach ($_SESSION['pedidos'] as $pedido) {
-            if ($pedido['numeroMesa'] == $numeroMesa && $pedido['status'] !== 'cancelado') {
-                $pedidoPendente = true;
-                break;
-            }
-        }
-    }
-
-    if ($pedidoPendente) {
-        $_SESSION['erros'] = ["Esta mesa possui um pedido e comanda aberto, seu status não pode ser alterado"];
-        header('Location: ' . BASE_URL . '?rota=mesas');
-        exit();
-    }
-
     try {
+        $comandaModel = new ComandaModel();
+
+        // Verifica se tem comanda aberta
+        if ($comandaModel->existeComandaAberta($numeroMesa)) {
+            // Busca todos os pedidos da mesa
+            $pedidos = Pedidos::buscarPorMesa($numeroMesa);
+
+            // Verifica se todos os pedidos estão cancelados
+            $todosCancelados = true;
+            foreach ($pedidos as $pedido) {
+                if ($pedido['status'] !== 'cancelado') {
+                    $todosCancelados = false;
+                    break;
+                }
+            }
+
+            // Se não estão todos cancelados, bloqueia
+            if (!$todosCancelados) {
+                $_SESSION['erros'] = ["Esta mesa possui uma comanda aberta com pedidos ativos. Feche a comanda antes de alterar o status."];
+                header('Location: ' . BASE_URL . '?rota=mesas');
+                exit();
+            }
+
+            // Se todos estão cancelados, deleta a comanda
+            $comandaModel->deletarPorMesa($numeroMesa);
+        }
+
         $mesaModel = new MesaModel();
         $mesaModel->atualizarStatus($numeroMesa, $status);
         $_SESSION['sucesso'] = "Status da mesa alterado para " . ucfirst($status) . ".";
@@ -125,10 +135,19 @@ function excluirMesa(): void
 
     try {
         $mesaModel = new MesaModel();
+        $comandaModel = new ComandaModel();
+
         $mesa = $mesaModel->buscarPorNumero($numeroMesa);
 
         if (!$mesa) {
             $_SESSION['erros'] = ["Mesa não encontrada"];
+            header('Location: ' . BASE_URL . '?rota=mesas');
+            exit();
+        }
+
+        // Valida se tem comanda aberta
+        if ($comandaModel->existeComandaAberta($numeroMesa)) {
+            $_SESSION['erros'] = ["Não é possível excluir uma mesa com comanda aberta. Feche a comanda primeiro."];
             header('Location: ' . BASE_URL . '?rota=mesas');
             exit();
         }
