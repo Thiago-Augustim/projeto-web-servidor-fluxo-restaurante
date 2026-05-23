@@ -8,62 +8,36 @@ define('CONTROLLERS', ROOT . 'app/controllers/');
 define('MIDDLEWARES', ROOT . 'app/middlewares/');
 
 require ROOT . 'vendor/autoload.php';
-require ROOT . 'database/Database.php';
-require MODELS . 'FuncionarioModel.php';
-
-require CONTROLLERS . 'MesasController.php';
-require CONTROLLERS . 'LoginController.php';
-require CONTROLLERS . 'FuncionariosController.php';
-require CONTROLLERS . 'PedidosController.php';
-require CONTROLLERS . 'ComandasController.php';
 
 session_start();
 
 $rota = $_GET['rota'] ?? 'login';
 $acao = $_GET['acao'] ?? 'index';
 
-
-if($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if($rota === 'mesas' && $acao === 'cadastrar') {
-        cadastrarMesa();
-    }
-    if($rota === 'mesas' && $acao === 'alterarStatusMesa') {
-        alterarStatusMesa();
-    }
-    if($rota ==='mesas' && $acao === 'excluirMesa'){
-        excluirMesa();
-    }
-    if ($rota === 'funcionarios' && $acao === 'cadastrar') {
-        cadastrarFuncionario();
-    }
-    if ($rota === 'funcionarios' && $acao === 'excluir') {
-        excluirFuncionario();
-    }
-    if ($rota === 'login' && $acao === 'entrar') {
-        login();
-    }
-    if($rota === 'pedidos' && $acao === 'cadastrar') {
-        cadastrarPedido();
-    }
-    if ($rota === 'pedidos' && $acao === 'alterarStatus') {
-        alterarStatusPedido();
-    }
-    if ($rota === 'comandas' && $acao === 'fechar') {
-        fecharComanda();
-    }
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    match (true) {
+        $rota === 'mesas' && $acao === 'cadastrar' => MesasController::cadastrar(),
+        $rota === 'mesas' && $acao === 'alterarStatusMesa' => MesasController::alterarStatus(),
+        $rota === 'mesas' && $acao === 'excluirMesa' => MesasController::excluir(),
+        $rota === 'funcionarios' && $acao === 'cadastrar' => FuncionariosController::cadastrar(),
+        $rota === 'funcionarios' && $acao === 'excluir'=> FuncionariosController::excluir(),
+        $rota === 'login' && $acao === 'entrar' => LoginController::login(),
+        $rota === 'pedidos' && $acao === 'cadastrar' => PedidosController::cadastrar(),
+        $rota === 'pedidos' && $acao === 'alterarStatus' => PedidosController::alterarStatus(),
+        $rota === 'comandas' && $acao === 'fechar' => ComandasController::fechar(),
+        default => null,
+    };
 }
 
-if($_SERVER['REQUEST_METHOD'] === 'GET') {
-    if ($rota === 'logout') {
-        logout();
-    }
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && $rota === 'logout') {
+    LoginController::logout();
 }
 
-match($rota) {
-    'login' => loginIndex(),
-    'mesas' => mesasIndex(),
-    'funcionarios' => funcionariosIndex(),
-    'pedidos' => pedidosIndex(),
-    'comandas' => comandasIndex(),
-    default => mesasIndex(),
+match ($rota) {
+    'login' => LoginController::index(),
+    'mesas' => MesasController::index(),
+    'funcionarios' => FuncionariosController::index(),
+    'pedidos' => PedidosController::index(),
+    'comandas' => ComandasController::index(),
+    default => MesasController::index(),
 };

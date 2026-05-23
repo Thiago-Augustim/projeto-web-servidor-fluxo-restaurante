@@ -130,7 +130,6 @@ class ComandaModel {
                     }
 
                     $comandaFechada['itens'][$nome]['quantidade'] += $item['quantidade'];
-
                     if (isset($item['preco'])) {
                         $subtotal = $item['quantidade'] * $item['preco'];
                         $comandaFechada['itens'][$nome]['subtotal'] += $subtotal;

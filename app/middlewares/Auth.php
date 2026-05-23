@@ -1,50 +1,32 @@
 <?php
-    
-/*
-Tipos de funcionario e acessos
 
-Garçom - MESAS / pedidos / comandas
-Cozinheiro - PEDIDOS 
-gerente - todos os acessos
+class Auth {
+    private static array $permissoes = [
+        'garcom'  => ['mesas', 'pedidos', 'comandas'],
+        'cozinha' => ['pedidos'],
+        'gerente' => ['mesas', 'pedidos', 'comandas', 'funcionarios', 'relatorios'],
+        'admin'   => ['mesas', 'pedidos', 'comandas', 'funcionarios', 'relatorios'],
+    ];
 
-*/
+    public static function validarAcesso(): void
+    {
+        $rota  = $_GET['rota'] ?? '';
+        $cargo = $_SESSION['usuarioEspecialidade'] ?? '';
+        $rotasPermitidas = self::$permissoes[$cargo] ?? [];
 
-$permissoes = [
+        if (in_array($rota, $rotasPermitidas)) {
+            return;
+        }
 
-    'garcom' => ['mesas', 'pedidos', 'comandas'],
-    'cozinha'=> ['pedidos'],
-    'gerente'=> ['mesas','pedidos', 'comandas','funcionarios','relatorios'],
-];
-
-function validarAcesso($permissoes) {
-
-    $rota = $_GET['rota'];
-    $usuarioCargo = $_SESSION['usuarioEspecialidade'];
-
-    $rotasPermitidas = $permissoes[$usuarioCargo];
-
-    if(in_array($rota, $rotasPermitidas)) {
-        return true;
-    } else {
-
-        $rotaRedirecionada = $rotasPermitidas[0];
-
-        $_SESSION['erros'] [] = "seu cargo $usuarioCargo não tem acesso a tela de $rota";
+        $rotaRedirecionada = $rotasPermitidas[0] ?? 'login';
+        $_SESSION['erros'][] = "Seu cargo {$cargo} não tem acesso à tela de {$rota}.";
         header("Location: " . BASE_URL . "?rota=" . $rotaRedirecionada);
         exit();
     }
+
+    public static function permiteMenu(string $rota): bool
+    {
+        $cargo = $_SESSION['usuarioEspecialidade'] ?? '';
+        return in_array($rota, self::$permissoes[$cargo] ?? []);
+    }
 }
-
-
-function permissoeMenu($rota){
-    global $permissoes;
-    $usuarioCargo = $_SESSION['usuarioEspecialidade'];
-    $rotasPermitidas = $permissoes[$usuarioCargo];
-
-    //retorna true se o usuario puder acesar a rota solicitada
-    return in_array($rota, $rotasPermitidas); 
-}
-
-
-
-?>
