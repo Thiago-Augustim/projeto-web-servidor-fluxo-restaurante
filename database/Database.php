@@ -7,7 +7,7 @@ class Database {
         if (self::$conexao === null) {
             try {
                 self::$conexao = new PDO(
-                    'mysql:host=127.0.0.1;port=3307;dbname=fluxo_restaurante;charset=utf8',
+                    'mysql:host=localhost;dbname=fluxo_restaurante;charset=utf8',
                     'root',
                     ''
                 );
