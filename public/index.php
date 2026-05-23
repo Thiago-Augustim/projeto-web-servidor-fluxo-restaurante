@@ -9,6 +9,7 @@ define('MIDDLEWARES', ROOT . 'app/middlewares/');
 
 require ROOT . 'vendor/autoload.php';
 require ROOT . 'database/Database.php';
+require MODELS . 'FuncionarioModel.php';
 
 require CONTROLLERS . 'MesasController.php';
 require CONTROLLERS . 'LoginController.php';

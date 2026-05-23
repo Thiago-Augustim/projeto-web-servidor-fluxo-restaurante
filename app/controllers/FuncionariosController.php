@@ -4,7 +4,7 @@ require_once MIDDLEWARES . 'Auth.php';
 
 function funcionariosIndex(): void
 {
-    if(!isset($_SESSION['logado'])){
+    if (!isset($_SESSION['logado'])) {
         header("Location: " . BASE_URL . "?rota=login");
         exit();
     }
@@ -12,134 +12,137 @@ function funcionariosIndex(): void
     global $permissoes;
     validarAcesso($permissoes);
 
-    if (!isset($_SESSION['funcionarios'])) {
-        $_SESSION['funcionarios'] = require MODELS . 'Funcionarios.php';
-    }
-
-    $funcionarios = $_SESSION['funcionarios'];
+    $model = new FuncionarioModel();
+    $funcionarios = $model->listar();
 
     require VIEWS . 'FuncionariosView.php';
 }
-
 
 function gerarUsuario($nome) {
     $nome = strtolower(trim($nome));
     $nome = iconv('UTF-8', 'ASCII//TRANSLIT', $nome);
     $nome = preg_replace('/[^a-zA-Z0-9\s]/', '', $nome);
-
     $partes = array_values(array_filter(explode(' ', $nome)));
-
     if (count($partes) >= 2) {
         return $partes[0] . '.' . end($partes);
     }
-
     return $partes[0] ?? 'usuario';
 }
 
-function usuarioExiste($usuario, $funcionarios) {
-    foreach ($funcionarios as $f) {
-        if (isset($f['usuario']) && $f['usuario'] === $usuario) {
-            return true;
-        }
-    }
-    return false;
-}
-
-function gerarUsuarioUnico($nome, $funcionarios) {
-    $base = gerarUsuario($nome);
+function gerarUsuarioUnico($nome) {
+    $model = new FuncionarioModel();
+    $base  = gerarUsuario($nome);
     $usuario = $base;
     $i = 1;
-
-    while (usuarioExiste($usuario, $funcionarios)) {
+    while ($model->verificarUsuarioExistente($usuario)) {
         $usuario = $base . $i;
         $i++;
     }
-
     return $usuario;
+}
+
+function validarFuncionario($nome, $especialidade, $senha): array
+{
+    $erros = [];
+    $especialidadesValidas = ['garcom', 'cozinha', 'gerente'];
+
+    if (empty(trim($nome))) {
+        $erros[] = 'O nome é obrigatório.';
+    } elseif (strlen(trim($nome)) < 3) {
+        $erros[] = 'O nome deve ter ao menos 3 caracteres.';
+    }
+
+    if (empty($especialidade) || !in_array($especialidade, $especialidadesValidas)) {
+        $erros[] = 'Especialidade inválida.';
+    }
+
+    if (empty($senha)) {
+        $erros[] = 'A senha é obrigatória.';
+    } elseif (strlen($senha) < 6) {
+        $erros[] = 'A senha deve ter ao menos 6 caracteres.';
+    }
+
+    return $erros;
 }
 
 function cadastrarFuncionario(): void
 {
-    $nome = $_POST['nome'] ?? null;
-    $especialidade = $_POST['especialidade'] ?? null;
-    $senha = $_POST['senha'] ?? null;
-    $usuarioInput = $_POST['usuario'] ?? '';
+    $nome          = trim($_POST['nome'] ?? '');
+    $especialidade = $_POST['especialidade'] ?? '';
+    $senha         = $_POST['senha'] ?? '';
+    $usuarioInput  = trim($_POST['usuario'] ?? '');
 
-    if (!$nome || !$especialidade || !$senha) {
-        $_SESSION['erros'] = ['Preencha todos os campos'];
+    $erros = validarFuncionario($nome, $especialidade, $senha);
+
+    if (!empty($erros)) {
+        $_SESSION['erros'] = $erros;
         header("Location: " . BASE_URL . "?rota=funcionarios");
-        exit;
+        exit();
     }
 
-    if (!isset($_SESSION['funcionarios'])) {
-        $_SESSION['funcionarios'] = require MODELS . 'Funcionarios.php';
-    }
-
-    $funcionarios = $_SESSION['funcionarios'];
+    $model = new FuncionarioModel();
 
     if (empty($usuarioInput)) {
-        $usuario = gerarUsuarioUnico($nome, $funcionarios);
+        $usuario = gerarUsuarioUnico($nome);
     } else {
-        // valida formato básico
-        $usuario = strtolower(trim($usuarioInput));
+        $usuario = strtolower($usuarioInput);
 
         if (!preg_match('/^[a-z0-9\.]+$/', $usuario)) {
-            $_SESSION['erros'] = ['Usuário inválido (use apenas letras, números e ponto)'];
+            $_SESSION['erros'] = ['Usuário inválido (use apenas letras, números e ponto).'];
             header("Location: " . BASE_URL . "?rota=funcionarios");
-            exit;
+            exit();
         }
 
-        // verifica duplicado
-        if (usuarioExiste($usuario, $funcionarios)) {
-            $_SESSION['erros'] = ['Usuário já existe'];
+        if ($model->verificarUsuarioExistente($usuario)) {
+            $_SESSION['erros'] = ['Usuário já cadastrado.'];
             header("Location: " . BASE_URL . "?rota=funcionarios");
-            exit;
+            exit();
         }
     }
 
-    $novoId = count($funcionarios) + 1;
-
-    $funcionarios[] = [
-        'id' => $novoId,
-        'nome' => $nome,
-        'usuario' => $usuario, 
-        'especialidade' => $especialidade,
-        'senha' => password_hash($senha, PASSWORD_DEFAULT)
-    ];
-
-    $_SESSION['funcionarios'] = $funcionarios;
+    try {
+        $model->inserir($nome, $usuario, $especialidade, $senha);
+        $_SESSION['sucesso'] = 'Funcionário cadastrado com sucesso.';
+    } catch (Exception $e) {
+        $_SESSION['erros'] = ['Erro ao cadastrar funcionário.'];
+    }
 
     header("Location: " . BASE_URL . "?rota=funcionarios");
-    exit;
+    exit();
 }
 
 function excluirFuncionario(): void
 {
     $id = $_POST['id'] ?? null;
 
-    if (!$id) {
-        $_SESSION['erros'] = ['ID inválido'];
+    if (!$id || !is_numeric($id)) {
+        $_SESSION['erros'] = ['ID inválido.'];
         header("Location: " . BASE_URL . "?rota=funcionarios");
-        exit;
+        exit();
     }
 
-    if (!isset($_SESSION['funcionarios'])) {
+    $model       = new FuncionarioModel();
+    $funcionario = $model->buscarPorId((int) $id);
+
+    if (!$funcionario) {
+        $_SESSION['erros'] = ['Funcionário não encontrado.'];
         header("Location: " . BASE_URL . "?rota=funcionarios");
-        exit;
+        exit();
     }
 
-    $funcionarios = $_SESSION['funcionarios'];
+    if (isset($_SESSION['funcionarioLogado']['id']) && (int) $_SESSION['funcionarioLogado']['id'] === (int) $id) {
+        $_SESSION['erros'] = ['Você não pode excluir o seu próprio usuário.'];
+        header("Location: " . BASE_URL . "?rota=funcionarios");
+        exit();
+    }
 
-    // filtra removendo o funcionário
-    $funcionarios = array_filter($funcionarios, function ($f) use ($id) {
-        return $f['id'] != $id;
-    });
-
-    // reindexa array (pra não ficar com buraco tipo [0,1,4,7])
-    $funcionarios = array_values($funcionarios);
-
-    $_SESSION['funcionarios'] = $funcionarios;
+    try {
+        $model->deletar((int) $id);
+        $_SESSION['sucesso'] = 'Funcionário excluído com sucesso.';
+    } catch (Exception $e) {
+        $_SESSION['erros'] = ['Erro ao excluir funcionário.'];
+    }
 
     header("Location: " . BASE_URL . "?rota=funcionarios");
-    exit;
+    exit();
 }

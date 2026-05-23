@@ -20,7 +20,7 @@ include VIEWS . 'partials/header.php';
                 <h5 class="mb-0">Equipe</h5>
 
                 <button class="btn px-5 btn-hover" data-bs-toggle="modal" data-bs-target="#modalFuncionario"
-                    style="background-color: var(--buttonsColor); color: var(--branco)"> 
+                    style="background-color: var(--buttonsColor); color: var(--branco)">
                     Novo Funcionário
                 </button>
 
@@ -68,11 +68,11 @@ include VIEWS . 'partials/header.php';
                 <p id="painel-especialidade" class="border bg-light d-inline-block p-2 ps-3 pe-3 rounded-3">
                     <b>--</b>
                 </p>
+
                 <form method="POST" action="<?= BASE_URL ?>?rota=funcionarios&acao=excluir" id="form-excluir">
                     <input type="hidden" name="id" id="input-excluir-id">
-    
                     <button type="submit" class="btn btn-danger w-100 mt-3">
-                     Excluir Funcionário
+                        Excluir Funcionário
                     </button>
                 </form>
 
@@ -88,7 +88,7 @@ include VIEWS . 'partials/header.php';
 
 </div>
 
-<!-- Tela para subir e add novo funcionario -->
+<!-- Modal novo funcionário -->
 <div class="modal fade" id="modalFuncionario" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -102,11 +102,11 @@ include VIEWS . 'partials/header.php';
                 <div class="modal-body">
                     <input type="text" id="nome" name="nome" class="form-control mb-3" placeholder="Nome completo" required>
                     <input type="text" id="usuario" name="usuario" class="form-control mb-3" placeholder="Usuário" readonly>
-                    <input type="password" name="senha" class="form-control mb-3" placeholder="Senha" required>
+                    <input type="password" name="senha" class="form-control mb-3" placeholder="Senha (mín. 6 caracteres)" required>
                     <select name="especialidade" class="form-control">
                         <option value="garcom">Garçom</option>
                         <option value="cozinha">Cozinha</option>
-                        <option value="cozinha">Gerente</option>
+                        <option value="gerente">Gerente</option>
                     </select>
                 </div>
 
@@ -118,6 +118,7 @@ include VIEWS . 'partials/header.php';
         </div>
     </div>
 </div>
+
 <?php include VIEWS . 'components/Error.php'; ?>
 <?php include VIEWS . 'components/Success.php'; ?>
 <?php include VIEWS . 'partials/footer.php'; ?>

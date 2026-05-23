@@ -1,11 +1,9 @@
--- ARQUIVO GERADO DIRETAMENTE PELO phpMyAdmin
-
 -- phpMyAdmin SQL Dump
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3307
--- Tempo de geração: 23/05/2026 às 04:47
+-- Tempo de geração: 23/05/2026 às 22:09
 -- Versão do servidor: 10.4.32-MariaDB
 -- Versão do PHP: 8.2.12
 
@@ -51,6 +49,31 @@ CREATE TABLE `comandas_fechadas` (
   `total` decimal(10,2) NOT NULL DEFAULT 0.00,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura para tabela `funcionarios`
+--
+
+CREATE TABLE `funcionarios` (
+  `id` int(11) NOT NULL,
+  `nome` varchar(150) NOT NULL,
+  `usuario` varchar(100) NOT NULL,
+  `especialidade` enum('garcom','cozinha','gerente','admin') NOT NULL,
+  `senha` varchar(255) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Despejando dados para a tabela `funcionarios`
+--
+
+INSERT INTO `funcionarios` (`id`, `nome`, `usuario`, `especialidade`, `senha`, `created_at`) VALUES
+(4, 'Root Garcom', 'root.garcom', 'garcom', '$2y$10$ALuSYzIdOo6kgxVJOimpkuMBEfRULFDp5puHJWk/1iEU25snYH7cS', '2026-05-23 20:02:36'),
+(5, 'Root Cozinha', 'root.cozinha', 'cozinha', '$2y$10$VYhZaiHbK5qvjfNLep0Bi.yq8bzkxaZCOF.dhgGP9JqoWPlP7nuEq', '2026-05-23 20:02:36'),
+(6, 'Root Gerente', 'root.gerente', 'gerente', '$2y$10$yNJyO0/U8OMi1GLtSAIIS./EbhcPYghP/CPWDOlrzRuihJk6QL/kW', '2026-05-23 20:02:36'),
+(7, 'Thiago Lima', 'thiago.lima', 'gerente', '$2y$10$bZpOY76IjQfaHoaucoxeCewNeq1BqrJ1ZQxDefJthpYRcUw0DJ3/W', '2026-05-23 20:02:57');
 
 -- --------------------------------------------------------
 
@@ -103,6 +126,13 @@ ALTER TABLE `comandas_fechadas`
   ADD KEY `idx_mesa_created` (`mesa`,`created_at`);
 
 --
+-- Índices de tabela `funcionarios`
+--
+ALTER TABLE `funcionarios`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `usuario` (`usuario`);
+
+--
 -- Índices de tabela `mesas`
 --
 ALTER TABLE `mesas`
@@ -130,6 +160,12 @@ ALTER TABLE `comandas`
 --
 ALTER TABLE `comandas_fechadas`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de tabela `funcionarios`
+--
+ALTER TABLE `funcionarios`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT de tabela `mesas`
