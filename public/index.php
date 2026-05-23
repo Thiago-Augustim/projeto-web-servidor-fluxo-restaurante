@@ -7,7 +7,7 @@ define('CONTROLLERS', ROOT . 'app/controllers/');
 define('MIDDLEWARES', ROOT . 'app/middlewares/');
 
 require ROOT . 'vendor/autoload.php';
-require MODELS . 'Database.php';
+require ROOT . 'database/Database.php';
 
 require CONTROLLERS . 'MesasController.php';
 require CONTROLLERS . 'LoginController.php';
@@ -19,6 +19,7 @@ session_start();
 
 $rota = $_GET['rota'] ?? 'login';
 $acao = $_GET['acao'] ?? 'index';
+
 
 if($_SERVER['REQUEST_METHOD'] === 'POST') {
     if($rota === 'mesas' && $acao === 'cadastrar') {
