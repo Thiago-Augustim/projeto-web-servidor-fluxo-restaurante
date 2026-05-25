@@ -1,11 +1,12 @@
 <?php
 
 class PedidosController {
+    use RespostaController;
+
     public static function index(): void
     {
         if (!isset($_SESSION['logado'])) {
-            header("Location: " . BASE_URL . "?rota=login");
-            exit();
+            self::redirecionar('login');
         }
 
         Auth::validarAcesso();
@@ -21,9 +22,7 @@ class PedidosController {
         $itens      = $_POST['itens']      ?? null;
 
         if (!$numeroMesa || !$itens) {
-            $_SESSION['erros'] = ['O pedido não pode ser vazio.'];
-            header('Location: ' . BASE_URL . '?rota=mesas');
-            exit();
+            self::redirecionar('mesas', null, ['O pedido não pode ser vazio.']);
         }
 
         try {
@@ -39,8 +38,7 @@ class PedidosController {
             $_SESSION['erros'] = [$e->getMessage()];
         }
 
-        header('Location: ' . BASE_URL . '?rota=mesas');
-        exit();
+        self::redirecionar('mesas');
     }
 
     public static function alterarStatus(): void
@@ -50,9 +48,7 @@ class PedidosController {
         $statusValidos = ['aguardando', 'em_preparo', 'concluido', 'cancelado'];
 
         if (!$id || !in_array($status, $statusValidos)) {
-            $_SESSION['erros'] = ['Selecione um pedido para alterar o status.'];
-            header('Location: ' . BASE_URL . '?rota=pedidos');
-            exit();
+            self::redirecionar('pedidos', null, ['Selecione um pedido para alterar o status.']);
         }
 
         try {
@@ -65,15 +61,11 @@ class PedidosController {
             }
 
             if (!$pedidoAtual) {
-                $_SESSION['erros'] = ['Pedido não encontrado.'];
-                header('Location: ' . BASE_URL . '?rota=pedidos');
-                exit();
+                self::redirecionar('pedidos', null, ['Pedido não encontrado.']);
             }
 
             if (in_array($pedidoAtual['status'], ['cancelado', 'concluido'])) {
-                $_SESSION['erros'] = ['Este pedido já está ' . ucfirst($pedidoAtual['status']) . ' e não pode ser alterado.'];
-                header('Location: ' . BASE_URL . '?rota=pedidos');
-                exit();
+                self::redirecionar('pedidos', null, ['Este pedido já está ' . ucfirst($pedidoAtual['status']) . ' e não pode ser alterado.']);
             }
 
             Pedidos::alterarStatus($id, $status);
@@ -82,7 +74,6 @@ class PedidosController {
             $_SESSION['erros'] = [$e->getMessage()];
         }
 
-        header('Location: ' . BASE_URL . '?rota=pedidos');
-        exit();
+        self::redirecionar('pedidos');
     }
 }

@@ -1,11 +1,12 @@
 <?php
 
 class FuncionariosController {
+    use RespostaController;
+
     public static function index(): void
     {
         if (!isset($_SESSION['logado'])) {
-            header("Location: " . BASE_URL . "?rota=login");
-            exit();
+            self::redirecionar('login');
         }
 
         Auth::validarAcesso();
@@ -25,9 +26,7 @@ class FuncionariosController {
         $erros = self::validar($nome, $especialidade, $senha);
 
         if (!empty($erros)) {
-            $_SESSION['erros'] = $erros;
-            header("Location: " . BASE_URL . "?rota=funcionarios");
-            exit();
+            self::redirecionar('funcionarios', null, $erros);
         }
 
         $model = new FuncionarioModel();
@@ -38,15 +37,11 @@ class FuncionariosController {
             $usuario = strtolower($usuarioInput);
 
             if (!preg_match('/^[a-z0-9\.]+$/', $usuario)) {
-                $_SESSION['erros'] = ['Usuário inválido (use apenas letras, números e ponto).'];
-                header("Location: " . BASE_URL . "?rota=funcionarios");
-                exit();
+                self::redirecionar('funcionarios', null, ['Usuário inválido (use apenas letras, números e ponto).']);
             }
 
             if ($model->verificarUsuarioExistente($usuario)) {
-                $_SESSION['erros'] = ['Usuário já cadastrado.'];
-                header("Location: " . BASE_URL . "?rota=funcionarios");
-                exit();
+                self::redirecionar('funcionarios', null, ['Usuário já cadastrado.']);
             }
         }
 
@@ -57,8 +52,7 @@ class FuncionariosController {
             $_SESSION['erros'] = ['Erro ao cadastrar funcionário.'];
         }
 
-        header("Location: " . BASE_URL . "?rota=funcionarios");
-        exit();
+        self::redirecionar('funcionarios');
     }
 
     public static function excluir(): void
@@ -66,24 +60,18 @@ class FuncionariosController {
         $id = $_POST['id'] ?? null;
 
         if (!$id || !is_numeric($id)) {
-            $_SESSION['erros'] = ['ID inválido.'];
-            header("Location: " . BASE_URL . "?rota=funcionarios");
-            exit();
+            self::redirecionar('funcionarios', null, ['ID inválido.']);
         }
 
         $model       = new FuncionarioModel();
         $funcionario = $model->buscarPorId((int) $id);
 
         if (!$funcionario) {
-            $_SESSION['erros'] = ['Funcionário não encontrado.'];
-            header("Location: " . BASE_URL . "?rota=funcionarios");
-            exit();
+            self::redirecionar('funcionarios', null, ['Funcionário não encontrado.']);
         }
 
         if (isset($_SESSION['funcionarioLogado']['id']) && (int) $_SESSION['funcionarioLogado']['id'] === (int) $id) {
-            $_SESSION['erros'] = ['Você não pode excluir o seu próprio usuário.'];
-            header("Location: " . BASE_URL . "?rota=funcionarios");
-            exit();
+            self::redirecionar('funcionarios', null, ['Você não pode excluir o seu próprio usuário.']);
         }
 
         try {
@@ -93,8 +81,7 @@ class FuncionariosController {
             $_SESSION['erros'] = ['Erro ao excluir funcionário.'];
         }
 
-        header("Location: " . BASE_URL . "?rota=funcionarios");
-        exit();
+        self::redirecionar('funcionarios');
     }
 
     private static function gerarUsuario(string $nome): string

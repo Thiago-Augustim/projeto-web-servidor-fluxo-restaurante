@@ -1,11 +1,12 @@
 <?php
 
 class ComandasController {
+    use RespostaController;
+
     public static function index(): void
     {
         if (!isset($_SESSION['logado'])) {
-            header("Location: " . BASE_URL . "?rota=login");
-            exit();
+            self::redirecionar('login');
         }
 
         Auth::validarAcesso();
@@ -52,9 +53,7 @@ class ComandasController {
         $mesa = $_POST['mesa'] ?? null;
 
         if (!$mesa) {
-            $_SESSION['erros'] = ['Selecione uma comanda para finalizar.'];
-            header("Location: " . BASE_URL . "?rota=comandas");
-            exit();
+            self::redirecionar('comandas', null, ['Selecione uma comanda para finalizar.']);
         }
 
         try {
@@ -70,9 +69,7 @@ class ComandasController {
             }
 
             if ($temPendente) {
-                $_SESSION['erros'] = ['Há pedidos que não foram concluídos. Todos devem estar concluídos para fechar a comanda!'];
-                header("Location: " . BASE_URL . "?rota=comandas");
-                exit();
+                self::redirecionar('comandas', null, ['Há pedidos que não foram concluídos. Todos devem estar concluídos para fechar a comanda!']);
             }
 
             $comandaFechada = $comandaModel->gerarComandaFechada($mesa);
@@ -89,7 +86,6 @@ class ComandasController {
             $_SESSION['erros'] = [$e->getMessage()];
         }
 
-        header("Location: " . BASE_URL . "?rota=comandas");
-        exit();
+        self::redirecionar('comandas');
     }
 }

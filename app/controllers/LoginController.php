@@ -1,11 +1,12 @@
 <?php
 
 class LoginController {
+    use RespostaController;
+
     public static function index(): void
     {
         if (isset($_SESSION['logado']) && $_SESSION['logado'] === "true") {
-            header('Location: ' . BASE_URL . '?rota=mesas');
-            exit();
+            self::redirecionar('mesas');
         }
         require VIEWS . 'LoginView.php';
     }
@@ -25,16 +26,13 @@ class LoginController {
                 'usuario'       => 'admin',
                 'especialidade' => 'admin',
             ];
-            header('Location: ' . BASE_URL . '?rota=mesas');
-            exit();
+            self::redirecionar('mesas');
         }
 
         $erros = self::validar($usuario, $senha);
 
         if (!empty($erros)) {
-            $_SESSION['erros'] = $erros;
-            header('Location: ' . BASE_URL . '?rota=login');
-            exit();
+            self::redirecionar('login', null, $erros);
         }
 
         $funcionario = (new FuncionarioModel())->buscarPorUsuario($usuario);
@@ -51,20 +49,16 @@ class LoginController {
             $_SESSION['usuarioEspecialidade'] = $funcionario['especialidade'];
 
             $destino = $funcionario['especialidade'] === 'cozinha' ? 'pedidos' : 'mesas';
-            header('Location: ' . BASE_URL . '?rota=' . $destino);
-            exit();
+            self::redirecionar($destino);
         }
 
-        $_SESSION['erros'] = ['Usuário ou senha inválidos.'];
-        header('Location: ' . BASE_URL . '?rota=login');
-        exit();
+        self::redirecionar('login', null, ['Usuário ou senha inválidos.']);
     }
 
     public static function logout(): void
     {
         session_destroy();
-        header('Location: ' . BASE_URL . '?rota=login');
-        exit();
+        self::redirecionar('login');
     }
 
     private static function validar(string $usuario, string $senha): array

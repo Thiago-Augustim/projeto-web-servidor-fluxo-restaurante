@@ -1,11 +1,12 @@
 <?php
 
 class MesasController {
+    use RespostaController;
+
     public static function index(): void
     {
         if (!isset($_SESSION['logado'])) {
-            header("Location: " . BASE_URL . "?rota=login");
-            exit();
+            self::redirecionar('login');
         }
 
         Auth::validarAcesso();
@@ -20,9 +21,7 @@ class MesasController {
         $erros = self::validar($_POST);
 
         if (!empty($erros)) {
-            $_SESSION['erros'] = $erros;
-            header('Location: ' . BASE_URL . '?rota=mesas');
-            exit();
+            self::redirecionar('mesas', null, $erros);
         }
 
         try {
@@ -32,8 +31,7 @@ class MesasController {
             $_SESSION['erros'] = [$e->getMessage()];
         }
 
-        header('Location: ' . BASE_URL . '?rota=mesas');
-        exit();
+        self::redirecionar('mesas');
     }
 
     public static function alterarStatus(): void
@@ -42,9 +40,7 @@ class MesasController {
         $status     = $_POST['status']     ?? null;
 
         if (!$numeroMesa || !$status) {
-            $_SESSION['erros'] = ["Selecione uma mesa para alterar o status."];
-            header('Location: ' . BASE_URL . '?rota=mesas');
-            exit();
+            self::redirecionar('mesas', null, ["Selecione uma mesa para alterar o status."]);
         }
 
         try {
@@ -55,9 +51,7 @@ class MesasController {
                 $todosCancelados = array_reduce($pedidos, fn($carry, $p) => $carry && $p['status'] === 'cancelado', true);
 
                 if (!$todosCancelados) {
-                    $_SESSION['erros'] = ["Esta mesa possui uma comanda aberta com pedidos ativos. Feche a comanda antes de alterar o status."];
-                    header('Location: ' . BASE_URL . '?rota=mesas');
-                    exit();
+                    self::redirecionar('mesas', null, ["Esta mesa possui uma comanda aberta com pedidos ativos. Feche a comanda antes de alterar o status."]);
                 }
 
                 $comandaModel->deletarPorMesa($numeroMesa);
@@ -69,8 +63,7 @@ class MesasController {
             $_SESSION['erros'] = [$e->getMessage()];
         }
 
-        header('Location: ' . BASE_URL . '?rota=mesas');
-        exit();
+        self::redirecionar('mesas');
     }
 
     public static function excluir(): void
@@ -78,9 +71,7 @@ class MesasController {
         $numeroMesa = $_POST['numeroMesa'] ?? null;
 
         if (empty($numeroMesa)) {
-            $_SESSION['erros'] = ["Selecione uma mesa antes de excluir."];
-            header('Location: ' . BASE_URL . '?rota=mesas');
-            exit();
+            self::redirecionar('mesas', null, ["Selecione uma mesa antes de excluir."]);
         }
 
         try {
@@ -89,21 +80,15 @@ class MesasController {
             $mesa         = $mesaModel->buscarPorNumero($numeroMesa);
 
             if (!$mesa) {
-                $_SESSION['erros'] = ["Mesa não encontrada."];
-                header('Location: ' . BASE_URL . '?rota=mesas');
-                exit();
+                self::redirecionar('mesas', null, ["Mesa não encontrada."]);
             }
 
             if ($comandaModel->existeComandaAberta($numeroMesa)) {
-                $_SESSION['erros'] = ["Não é possível excluir uma mesa com comanda aberta."];
-                header('Location: ' . BASE_URL . '?rota=mesas');
-                exit();
+                self::redirecionar('mesas', null, ["Não é possível excluir uma mesa com comanda aberta."]);
             }
 
             if ($mesa['status'] !== 'livre') {
-                $_SESSION['erros'] = ["A mesa deve estar livre para ser excluída."];
-                header('Location: ' . BASE_URL . '?rota=mesas');
-                exit();
+                self::redirecionar('mesas', null, ["A mesa deve estar livre para ser excluída."]);
             }
 
             $mesaModel->deletar($mesa['id']);
@@ -112,8 +97,7 @@ class MesasController {
             $_SESSION['erros'] = [$e->getMessage()];
         }
 
-        header('Location: ' . BASE_URL . '?rota=mesas');
-        exit();
+        self::redirecionar('mesas');
     }
 
     private static function validar(array $dados): array
