@@ -1,11 +1,7 @@
 <?php
 
 class MesaModel {
-    private $db;
-
-    public function __construct() {
-        $this->db = Database::getConexao();
-    }
+    use ConexaoBD;
 
     public function listar() {
         try {
