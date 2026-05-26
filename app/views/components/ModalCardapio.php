@@ -147,7 +147,7 @@
       </div>
 
       <div class="modal-footer bg-light d-block">
-        <form id="form-pedido-final" action="<?= BASE_URL . '?rota=pedidos&acao=cadastrar' ?>" method="POST">
+        <form id="form-pedido-final" action="<?= BASE_URL ?>pedidos/cadastrar" method="POST">
           <input type="hidden" id="input-mesa-pedido" name="numeroMesa">
 
           <div id="resumo-pedido" class="mb-3">

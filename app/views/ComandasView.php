@@ -1,4 +1,4 @@
-<?php
+    <?php
 $titulo = 'Comandas';
 $paginaAtiva = 'comandas';
 include VIEWS . 'partials/header.php';
@@ -113,7 +113,7 @@ include VIEWS . 'partials/header.php';
 
             <div class="d-flex flex-column gap-2">
                 <form id="form-fechar-comanda" method="POST"
-                    action="<?= BASE_URL ?>?rota=comandas&acao=fechar">
+                    action="<?= BASE_URL ?>comandas/fechar">
 
                     <input type="hidden" name="mesa" id="input-mesa-fechar">
 

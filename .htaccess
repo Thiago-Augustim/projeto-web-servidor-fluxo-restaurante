@@ -1,5 +1,9 @@
-RewriteEngine on
-RewriteCond %{SCRIPT_FILENAME} !-f
-RewriteCond %{SCRIPT_FILENAME} !-d
-RewriteCond %{SCRIPT_FILENAME} !-l
-RewriteRule ^(.*)$ index.php/$1 
+RewriteEngine On
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-l
+
+RewriteRule ^([a-zA-Z]+)/([a-zA-Z]+)/?$ public/index.php?rota=$1&acao=$2 [L,QSA]
+RewriteRule ^([a-zA-Z]+)/?$ public/index.php?rota=$1 [L,QSA]
+RewriteRule ^$ public/index.php [L]
