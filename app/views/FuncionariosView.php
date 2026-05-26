@@ -69,7 +69,7 @@ include VIEWS . 'partials/header.php';
                     <b>--</b>
                 </p>
 
-                <form method="POST" action="<?= BASE_URL ?>?rota=funcionarios&acao=excluir" id="form-excluir">
+                <form method="POST" action="<?= BASE_URL ?>funcionarios/excluir">
                     <input type="hidden" name="id" id="input-excluir-id">
                     <button type="submit" class="btn btn-danger w-100 mt-3">
                         Excluir Funcionário
@@ -93,7 +93,7 @@ include VIEWS . 'partials/header.php';
     <div class="modal-dialog">
         <div class="modal-content">
 
-            <form method="POST" action="<?= BASE_URL ?>?rota=funcionarios&acao=cadastrar">
+            <form method="POST" action="<?= BASE_URL ?>funcionarios/cadastrar">
                 <div class="modal-header">
                     <h5>Novo Funcionário</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>

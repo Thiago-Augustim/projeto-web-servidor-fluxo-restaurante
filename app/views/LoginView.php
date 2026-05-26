@@ -18,7 +18,7 @@ include VIEWS . 'partials/Header.php';
             <?php unset($_SESSION['erros']); ?>
         <?php endif; ?>
 
-        <form method="POST" action="<?= BASE_URL ?>?rota=login&amp;acao=entrar">
+        <form method="POST" action="<?= BASE_URL ?>login/entrar">
 
             <div class="mb-3">
                 <label class="form-label">Usuário</label>
@@ -32,7 +32,7 @@ include VIEWS . 'partials/Header.php';
                        placeholder="Sua senha">
             </div>
 
-            <button type="submit" class="btn w-100" method="POST" action="<?= BASE_URL ?>?rota=login&amp;acao=entrar"
+            <button type="submit" class="btn w-100" method="POST" action="<?= BASE_URL ?>login/entrar"
                     style="background-color: var(--buttonsColor); color: var(--branco)">
                 Entrar
             </button>

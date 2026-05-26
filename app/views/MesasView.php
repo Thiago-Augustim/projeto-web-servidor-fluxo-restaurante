@@ -81,7 +81,7 @@ include VIEWS . 'partials/header.php';
 
 
 
-                        <form method="POST" action="<?= BASE_URL ?>?rota=mesas&amp;acao=alterarStatusMesa">
+                        <form method="POST" action="<?= BASE_URL ?>mesas/alterarStatus">
 
                             <input type="hidden" name="numeroMesa" class="input-mesa-id" value="">
 
@@ -98,7 +98,7 @@ include VIEWS . 'partials/header.php';
                                 </button>
 
                                 <button type="submit"
-                                    formaction="<?= BASE_URL ?>?rota=mesas&amp;acao=excluirMesa"
+                                    formaction="<?= BASE_URL ?>mesas/excluir"
                                     class="btn mt-2 btn-danger">
                                     Excluir Mesa
                                 </button>
@@ -128,7 +128,8 @@ include VIEWS . 'partials/header.php';
     </div>
 
     <!-- Modal de Cadastro de Mesa -->
-    <form class="modal fade" id="modalMesa" tabindex="-1" method="POST" action="<?php echo BASE_URL . '?rota=mesas&acao=cadastrar' ?>">
+    <form class="modal fade" id="modalMesa" tabindex="-1" method="POST" action="<?= BASE_URL ?>mesas/cadastrar"
+>
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
 

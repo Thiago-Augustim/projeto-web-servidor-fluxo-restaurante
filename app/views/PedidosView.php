@@ -114,7 +114,7 @@ $statusColors = [
                     </div>
 
                     <h6>Mudar Status:</h6>
-                    <form method="POST" action="<?= BASE_URL ?>?rota=pedidos&acao=alterarStatus">
+                    <form method="POST" action="<?= BASE_URL ?>pedidos/alterarStatus">
                         <input type="hidden" name="id" id="input-pedido-id" value="">
                         <div class="d-grid gap-2">
                             <div class="row g-2">

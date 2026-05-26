@@ -9,7 +9,7 @@ trait RespostaController {
         if ($erros !== null) {
             $_SESSION['erros'] = $erros;
         }
-        header('Location: ' . BASE_URL . '?rota=' . $rota);
+        header('Location: ' . BASE_URL . $rota);
         exit();
     }
 }
